@@ -1,5 +1,5 @@
-name: toolforge
-description: "ToolForge — A premium multi-tool utility app for OLED devices."
+name: zenvix
+description: "Zenvix â€” A premium multi-tool utility app for OLED devices."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -42,11 +42,24 @@ dependencies:
   vector_math: ^2.2.0
   syncfusion_flutter_pdf: ^33.2.3
   reorderable_grid_view: ^2.2.8
+  
+  #logo
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/logo.png"
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/logo/logo.png"
+
 flutter:
   uses-material-design: true
+
+flutter_icons:
+  
