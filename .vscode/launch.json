@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Zenvix (Release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Zenvix (Debug)",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}

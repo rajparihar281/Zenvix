@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = toolforge
+PRODUCT_NAME = Zenvix
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.toolforge.toolforge
+PRODUCT_BUNDLE_IDENTIFIER = com.Zenvix.Zenvix
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.toolforge. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright Â© 2026 com.Zenvix. All rights reserved.

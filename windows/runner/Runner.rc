@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.toolforge" "\0"
-            VALUE "FileDescription", "toolforge" "\0"
+            VALUE "CompanyName", "com.Zenvix" "\0"
+            VALUE "FileDescription", "Zenvix" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "toolforge" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.toolforge. All rights reserved." "\0"
-            VALUE "OriginalFilename", "toolforge.exe" "\0"
-            VALUE "ProductName", "toolforge" "\0"
+            VALUE "InternalName", "Zenvix" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.Zenvix. All rights reserved." "\0"
+            VALUE "OriginalFilename", "Zenvix.exe" "\0"
+            VALUE "ProductName", "Zenvix" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

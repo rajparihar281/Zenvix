@@ -1,4 +1,4 @@
-# ProGuard rules for ToolForge
+# ProGuard rules for Zenvix
 
 # PDFBox / JPXFilter related warnings
 # These classes are missing from the runtime and are only needed for JPEG 2000 support.
