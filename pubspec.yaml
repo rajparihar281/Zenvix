@@ -1,0 +1,52 @@
+name: toolforge
+description: "ToolForge — A premium multi-tool utility app for OLED devices."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # File picking & camera
+  image_picker: ^1.1.2
+  file_picker: ^8.1.7
+
+  # PDF creation & preview
+  pdf: ^3.11.2
+  printing: ^5.14.0
+
+  # PDF merging
+  pdf_combiner: ^2.0.3
+
+  # Storage & sharing
+  path_provider: ^2.1.5
+  share_plus: ^10.1.4
+
+  # Image processing
+  image: ^4.5.3
+  image_cropper: ^8.0.2
+
+  # Permissions
+  permission_handler: ^11.4.0
+
+  # Typography
+  google_fonts: ^6.2.1
+  vector_math: ^2.2.0
+  syncfusion_flutter_pdf: ^33.2.3
+  reorderable_grid_view: ^2.2.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
