@@ -15,7 +15,7 @@ class PdfPageManagerService {
     await for (final page in Printing.raster(pdfData, dpi: 72)) {
       final pngBytes = await page.toPng();
       pages.add(PdfPageItem(
-        id: DateTime.now().microsecondsSinceEpoch.toString() + '_$index',
+        id: '${DateTime.now().microsecondsSinceEpoch}_$index',
         originalIndex: index,
         thumbnailData: pngBytes,
       ));
@@ -63,8 +63,7 @@ class PdfPageManagerService {
       case PdfPageRotateAngle.rotateAngle270:
         return 270;
       case PdfPageRotateAngle.rotateAngle0:
-      default:
-        return 0;
+      return 0;
     }
   }
 

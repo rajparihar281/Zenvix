@@ -19,7 +19,7 @@ class AppStrings {
   static const String comingSoon = 'Coming Soon';
 
   // â”€â”€ Image to PDF â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const String imageToPdf = 'Image â†’ PDF';
+  static const String imageToPdf = 'Image To PDF';
   static const String imageToPdfDesc =
       'Convert images to polished PDF documents';
   static const String addImages = 'Add Images';

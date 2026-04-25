@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 
-/// A premium button with gradient border glow and optional icon.
 ///
 /// Use for primary CTAs throughout the app.
 class NeonButton extends StatefulWidget {
