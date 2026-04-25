@@ -30,6 +30,15 @@ final List<ToolDefinition> registeredTools = [
     secondaryColor: AppColors.accentPink,
     routePath: '/pdf-combiner',
   ),
+  const ToolDefinition(
+    id: 'pdf_page_manager',
+    title: 'Page Manager',
+    description: 'Reorder, rotate, delete, and extract PDF pages',
+    icon: Icons.pages_outlined,
+    accentColor: AppColors.accentPink,
+    secondaryColor: AppColors.warning,
+    routePath: '/pdf-page-manager',
+  ),
 
   // ── Coming Soon ───────────────────────────────────────────────────────
   const ToolDefinition(
