@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../shared/widgets/neon_button.dart';
-import '../../../shared/widgets/error_snackbar.dart';
-import '../providers/image_to_pdf_provider.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/image_to_pdf/providers/image_to_pdf_provider.dart';
+import 'package:zenvix/shared/widgets/error_snackbar.dart';
+import 'package:zenvix/shared/widgets/neon_button.dart';
 
 /// Post-conversion result screen with save/share/convert-another actions.
 class PdfResultScreen extends ConsumerWidget {
@@ -88,7 +88,7 @@ class PdfResultScreen extends ConsumerWidget {
                         await Share.shareXFiles([
                           XFile(state.outputPath!),
                         ], text: 'Created with Zenvix');
-                      } catch (e) {
+                      } on Exception catch (e) {
                         if (context.mounted) {
                           showErrorSnackbar(
                             context,

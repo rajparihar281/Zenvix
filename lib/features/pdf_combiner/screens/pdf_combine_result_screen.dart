@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../shared/widgets/neon_button.dart';
-import '../../../shared/widgets/error_snackbar.dart';
-import '../providers/pdf_combiner_provider.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/pdf_combiner/providers/pdf_combiner_provider.dart';
+import 'package:zenvix/shared/widgets/error_snackbar.dart';
+import 'package:zenvix/shared/widgets/neon_button.dart';
 
 class PdfCombineResultScreen extends ConsumerWidget {
   const PdfCombineResultScreen({super.key});
@@ -18,58 +18,58 @@ class PdfCombineResultScreen extends ConsumerWidget {
 
     return showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppColors.surface,
-          title: const Text(
-            'Save PDF',
-            style: TextStyle(color: AppColors.textPrimary),
-          ),
-          content: TextField(
-            controller: controller,
-            style: const TextStyle(color: AppColors.textPrimary),
-            decoration: InputDecoration(
-              labelText: 'File Name',
-              suffixText: '.pdf',
-              labelStyle: const TextStyle(color: AppColors.textSecondary),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.surfaceBorder),
-              ),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.electricPurple),
-              ),
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text(
+          'Save PDF',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: TextField(
+          controller: controller,
+          style: const TextStyle(color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            labelText: 'File Name',
+            suffixText: '.pdf',
+            labelStyle: const TextStyle(color: AppColors.textSecondary),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.surfaceBorder),
             ),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.textSecondary),
-              ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.electricPurple),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.electricPurple,
-              ),
-              onPressed: () async {
-                final name = controller.text.trim();
-                if (name.isEmpty) return;
-                Navigator.pop(context); // close dialog
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.electricPurple,
+            ),
+            onPressed: () async {
+              final name = controller.text.trim();
+              if (name.isEmpty) {
+                return;
+              }
+              Navigator.pop(context); // close dialog
 
-                final savedPath = await ref
-                    .read(pdfCombinerProvider.notifier)
-                    .saveMergedPdf(name);
-                if (context.mounted && savedPath != null) {
-                  showSuccessSnackbar(context, message: 'Saved to: $savedPath');
-                }
-              },
-              child: const Text('Save', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        );
-      },
+              final savedPath = await ref
+                  .read(pdfCombinerProvider.notifier)
+                  .saveMergedPdf(name);
+              if (context.mounted && savedPath != null) {
+                showSuccessSnackbar(context, message: 'Saved to: $savedPath');
+              }
+            },
+            child: const Text('Save', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -148,7 +148,7 @@ class PdfCombineResultScreen extends ConsumerWidget {
                         await Share.shareXFiles([
                           XFile(state.outputPath!),
                         ], text: 'Merged with Zenvix');
-                      } catch (e) {
+                      } on Exception catch (e) {
                         if (context.mounted) {
                           showErrorSnackbar(
                             context,

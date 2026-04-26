@@ -1,21 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/my_file_item.dart';
-import '../services/my_files_service.dart';
+import 'package:zenvix/features/my_files/models/my_file_item.dart';
+import 'package:zenvix/features/my_files/services/my_files_service.dart';
 
 enum FileSortOption { newest, oldest, nameAsc, nameDesc, sizeDesc, sizeAsc }
 
 class MyFilesState {
-  final List<MyFileItem> files;
-  final bool isLoading;
-  final String? errorMessage;
-  final FileSortOption sortOption;
-
   const MyFilesState({
     this.files = const [],
     this.isLoading = false,
     this.errorMessage,
     this.sortOption = FileSortOption.newest,
   });
+  final List<MyFileItem> files;
+  final bool isLoading;
+  final String? errorMessage;
+  final FileSortOption sortOption;
 
   MyFilesState copyWith({
     List<MyFileItem>? files,
@@ -23,22 +22,19 @@ class MyFilesState {
     String? errorMessage,
     FileSortOption? sortOption,
     bool clearError = false,
-  }) {
-    return MyFilesState(
-      files: files ?? this.files,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      sortOption: sortOption ?? this.sortOption,
-    );
-  }
+  }) => MyFilesState(
+    files: files ?? this.files,
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    sortOption: sortOption ?? this.sortOption,
+  );
 }
 
 class MyFilesNotifier extends StateNotifier<MyFilesState> {
-  final MyFilesService _service = MyFilesService();
-
   MyFilesNotifier() : super(const MyFilesState()) {
     loadFiles();
   }
+  final MyFilesService _service = MyFilesService();
 
   Future<void> loadFiles() async {
     state = state.copyWith(isLoading: true, clearError: true);
@@ -48,7 +44,7 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
         isLoading: false,
         files: _sortFiles(files, state.sortOption),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         isLoading: false,
         errorMessage: 'Failed to load files: $e',
@@ -57,7 +53,9 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
   }
 
   void setSortOption(FileSortOption option) {
-    if (state.sortOption == option) return;
+    if (state.sortOption == option) {
+      return;
+    }
     state = state.copyWith(
       sortOption: option,
       files: _sortFiles(state.files, option),
@@ -99,7 +97,7 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
       // Remove from state
       final updated = state.files.where((f) => f.path != path).toList();
       state = state.copyWith(files: updated);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Failed to delete file: $e');
     }
   }
@@ -107,11 +105,11 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
   Future<void> renameFile(String oldPath, String newName) async {
     try {
       final updatedItem = await _service.renameFile(oldPath, newName);
-      final updatedFiles = state.files.map((f) {
-        return f.path == oldPath ? updatedItem : f;
-      }).toList();
+      final updatedFiles = state.files
+          .map((f) => f.path == oldPath ? updatedItem : f)
+          .toList();
       state = state.copyWith(files: _sortFiles(updatedFiles, state.sortOption));
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Failed to rename file: $e');
     }
   }

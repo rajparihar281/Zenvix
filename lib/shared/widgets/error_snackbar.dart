@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
 
 /// Themed floating snackbar for errors, with an optional retry action.
 void showErrorSnackbar(

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../../../core/constants/app_strings.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../shared/widgets/error_snackbar.dart';
-import '../models/my_file_item.dart';
-import '../providers/my_files_provider.dart';
-import 'pdf_viewer_screen.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/my_files/models/my_file_item.dart';
+import 'package:zenvix/features/my_files/providers/my_files_provider.dart';
+import 'package:zenvix/features/my_files/screens/pdf_viewer_screen.dart';
+import 'package:zenvix/shared/widgets/error_snackbar.dart';
 
 class MyFilesScreen extends ConsumerStatefulWidget {
   const MyFilesScreen({super.key});
@@ -31,117 +30,113 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
     final controller = TextEditingController(
       text: file.name.replaceAll('.pdf', ''),
     );
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppColors.surface,
-          title: const Text(
-            'Rename File',
-            style: TextStyle(color: AppColors.textPrimary),
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text(
+          'Rename File',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: TextField(
+          controller: controller,
+          style: const TextStyle(color: AppColors.textPrimary),
+          decoration: const InputDecoration(
+            labelText: 'New Name',
+            suffixText: '.pdf',
+            labelStyle: TextStyle(color: AppColors.textSecondary),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.surfaceBorder),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.electricPurple),
+            ),
           ),
-          content: TextField(
-            controller: controller,
-            style: const TextStyle(color: AppColors.textPrimary),
-            decoration: const InputDecoration(
-              labelText: 'New Name',
-              suffixText: '.pdf',
-              labelStyle: TextStyle(color: AppColors.textSecondary),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.surfaceBorder),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.electricPurple),
-              ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
             ),
-            autofocus: true,
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.textSecondary),
-              ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.electricPurple,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.electricPurple,
-              ),
-              onPressed: () async {
-                final newName = controller.text.trim();
-                if (newName.isNotEmpty &&
-                    newName != file.name.replaceAll('.pdf', '')) {
-                  await ref
-                      .read(myFilesProvider.notifier)
-                      .renameFile(file.path, newName);
-                }
-                if (context.mounted) Navigator.pop(context);
-              },
-              child: const Text(
-                'Rename',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty &&
+                  newName != file.name.replaceAll('.pdf', '')) {
+                await ref
+                    .read(myFilesProvider.notifier)
+                    .renameFile(file.path, newName);
+              }
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Rename', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
   void _showDeleteConfirmation(MyFileItem file) {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppColors.surface,
-          title: const Text(
-            'Delete File?',
-            style: TextStyle(color: AppColors.textPrimary),
-          ),
-          content: Text(
-            'Are you sure you want to delete "${file.name}"? This cannot be undone.',
-            style: const TextStyle(color: AppColors.textSecondary),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.textSecondary),
-              ),
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text(
+          'Delete File?',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: Text(
+          'Are you sure you want to delete "${file.name}"? This cannot be undone.',
+          style: const TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-              onPressed: () async {
-                await ref.read(myFilesProvider.notifier).deleteFile(file.path);
-                if (context.mounted) Navigator.pop(context);
-              },
-              child: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+            onPressed: () async {
+              await ref.read(myFilesProvider.notifier).deleteFile(file.path);
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
-  void _shareFile(MyFileItem file) async {
+  Future<void> _shareFile(MyFileItem file) async {
     try {
       await Share.shareXFiles([
         XFile(file.path),
       ], text: 'Generated with Zenvix');
-    } catch (e) {
-      if (mounted) showErrorSnackbar(context, message: 'Failed to share: $e');
+    } on Exception catch (e) {
+      if (mounted) {
+        showErrorSnackbar(context, message: 'Failed to share: $e');
+      }
     }
   }
 
   void _openFile(MyFileItem file) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<PdfViewerScreen>(
         builder: (_) =>
             PdfViewerScreen(filePath: file.path, fileName: file.name),
       ),
@@ -214,19 +209,17 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
     FileSortOption option,
     String label,
     FileSortOption current,
-  ) {
-    return PopupMenuItem(
-      value: option,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 14)),
-          if (current == option)
-            const Icon(Icons.check, size: 18, color: AppColors.neonBlue),
-        ],
-      ),
-    );
-  }
+  ) => PopupMenuItem(
+    value: option,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 14)),
+        if (current == option)
+          const Icon(Icons.check, size: 18, color: AppColors.neonBlue),
+      ],
+    ),
+  );
 
   Widget _buildBody(MyFilesState state) {
     if (state.isLoading && state.files.isEmpty) {

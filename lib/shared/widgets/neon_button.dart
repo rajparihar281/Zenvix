@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
 
-/// A premium button with gradient border glow and optional icon.
 ///
 /// Use for primary CTAs throughout the app.
 class NeonButton extends StatefulWidget {
-  final String label;
-  final VoidCallback? onPressed;
-  final IconData? icon;
-  final bool isLoading;
-  final bool expanded;
-
   const NeonButton({
     super.key,
     required this.label,
@@ -21,6 +14,11 @@ class NeonButton extends StatefulWidget {
     this.isLoading = false,
     this.expanded = true,
   });
+  final String label;
+  final VoidCallback? onPressed;
+  final IconData? icon;
+  final bool isLoading;
+  final bool expanded;
 
   @override
   State<NeonButton> createState() => _NeonButtonState();
@@ -55,26 +53,24 @@ class _NeonButtonState extends State<NeonButton>
 
     return AnimatedBuilder(
       animation: _glowAnimation,
-      builder: (context, child) {
-        return Container(
-          width: widget.expanded ? double.infinity : null,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-            boxShadow: isEnabled
-                ? [
-                    BoxShadow(
-                      color: AppColors.neonBlue.withValues(
-                        alpha: _glowAnimation.value * 0.25,
-                      ),
-                      blurRadius: 16,
-                      spreadRadius: 1,
+      builder: (context, child) => Container(
+        width: widget.expanded ? double.infinity : null,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          boxShadow: isEnabled
+              ? [
+                  BoxShadow(
+                    color: AppColors.neonBlue.withValues(
+                      alpha: _glowAnimation.value * 0.25,
                     ),
-                  ]
-                : null,
-          ),
-          child: child,
-        );
-      },
+                    blurRadius: 16,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
+        ),
+        child: child,
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(

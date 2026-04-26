@@ -1,22 +1,22 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../models/my_file_item.dart';
+import 'package:zenvix/features/my_files/models/my_file_item.dart';
 
 /// Handles file system operations for "My Files".
 class MyFilesService {
   /// Scans the application documents directory for generated PDFs.
   Future<List<MyFileItem>> getGeneratedFiles() async {
     final dir = await getApplicationDocumentsDirectory();
-    final List<MyFileItem> items = [];
+    final items = <MyFileItem>[];
 
-    if (!await dir.exists()) return items;
+    if (!dir.existsSync()) {
+      return items;
+    }
 
     final entities = dir.listSync();
-    for (var entity in entities) {
+    for (final entity in entities) {
       if (entity is File) {
-        final name = entity.path.split('/').last.split('\\').last;
-        // Check if it's a PDF. We also use the Zenvix_ prefix as a soft filter if needed,
-        // but any PDF in the app's sandbox is likely ours.
+        final name = entity.path.split('/').last.split(r'\').last;
         if (name.toLowerCase().endsWith('.pdf')) {
           items.add(MyFileItem.fromFile(entity));
         }
@@ -29,24 +29,23 @@ class MyFilesService {
   /// Deletes a file from the file system.
   Future<void> deleteFile(String path) async {
     final file = File(path);
-    if (await file.exists()) {
+    if (file.existsSync()) {
       await file.delete();
     }
   }
 
-  /// Renames a file in the file system.
   Future<MyFileItem> renameFile(String path, String newName) async {
     final file = File(path);
-    if (!await file.exists()) {
+    if (!file.existsSync()) {
       throw Exception('File does not exist');
     }
 
-    if (!newName.toLowerCase().endsWith('.pdf')) {
-      newName += '.pdf';
-    }
+    final finalNewName = newName.toLowerCase().endsWith('.pdf')
+        ? newName
+        : '$newName.pdf';
 
     final dirPath = file.parent.path;
-    final newPath = '$dirPath/$newName';
+    final newPath = '$dirPath/$finalNewName';
 
     final newFile = await file.rename(newPath);
     return MyFileItem.fromFile(newFile);

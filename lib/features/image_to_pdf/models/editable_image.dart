@@ -7,6 +7,19 @@ import 'package:flutter/material.dart';
 /// The [processedBytes] field holds the result of applying all edits.
 /// It is lazily computed only when the user triggers processing or export.
 class EditableImage {
+  EditableImage({
+    required this.id,
+    required this.originalPath,
+    this.processedBytes,
+    this.rotation = 0,
+    this.flipHorizontal = false,
+    this.flipVertical = false,
+    this.brightness = 0,
+    this.contrast = 0,
+    this.grayscale = false,
+    this.cropRect,
+  });
+
   /// Unique identifier (UUID-style or path-based hash).
   final String id;
 
@@ -37,19 +50,6 @@ class EditableImage {
   /// Crop rectangle (null = no crop). Normalized 0-1 coordinates.
   Rect? cropRect;
 
-  EditableImage({
-    required this.id,
-    required this.originalPath,
-    this.processedBytes,
-    this.rotation = 0,
-    this.flipHorizontal = false,
-    this.flipVertical = false,
-    this.brightness = 0,
-    this.contrast = 0,
-    this.grayscale = false,
-    this.cropRect,
-  });
-
   /// Creates a deep copy for immutable state updates.
   EditableImage copyWith({
     String? id,
@@ -64,22 +64,20 @@ class EditableImage {
     Rect? cropRect,
     bool clearProcessedBytes = false,
     bool clearCropRect = false,
-  }) {
-    return EditableImage(
-      id: id ?? this.id,
-      originalPath: originalPath ?? this.originalPath,
-      processedBytes: clearProcessedBytes
-          ? null
-          : (processedBytes ?? this.processedBytes),
-      rotation: rotation ?? this.rotation,
-      flipHorizontal: flipHorizontal ?? this.flipHorizontal,
-      flipVertical: flipVertical ?? this.flipVertical,
-      brightness: brightness ?? this.brightness,
-      contrast: contrast ?? this.contrast,
-      grayscale: grayscale ?? this.grayscale,
-      cropRect: clearCropRect ? null : (cropRect ?? this.cropRect),
-    );
-  }
+  }) => EditableImage(
+    id: id ?? this.id,
+    originalPath: originalPath ?? this.originalPath,
+    processedBytes: clearProcessedBytes
+        ? null
+        : (processedBytes ?? this.processedBytes),
+    rotation: rotation ?? this.rotation,
+    flipHorizontal: flipHorizontal ?? this.flipHorizontal,
+    flipVertical: flipVertical ?? this.flipVertical,
+    brightness: brightness ?? this.brightness,
+    contrast: contrast ?? this.contrast,
+    grayscale: grayscale ?? this.grayscale,
+    cropRect: clearCropRect ? null : (cropRect ?? this.cropRect),
+  );
 
   /// Whether any edits have been applied.
   bool get hasEdits =>
@@ -92,16 +90,14 @@ class EditableImage {
       cropRect != null;
 
   /// Resets all editing parameters to defaults.
-  EditableImage resetEdits() {
-    return copyWith(
-      rotation: 0,
-      flipHorizontal: false,
-      flipVertical: false,
-      brightness: 0,
-      contrast: 0,
-      grayscale: false,
-      clearProcessedBytes: true,
-      clearCropRect: true,
-    );
-  }
+  EditableImage resetEdits() => copyWith(
+    rotation: 0,
+    flipHorizontal: false,
+    flipVertical: false,
+    brightness: 0,
+    contrast: 0,
+    grayscale: false,
+    clearProcessedBytes: true,
+    clearCropRect: true,
+  );
 }

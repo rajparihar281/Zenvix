@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../models/tool_definition.dart';
-import '../theme/app_colors.dart';
+import 'package:zenvix/core/models/tool_definition.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
 
 /// Central registry of all tools in the app.
 ///
 /// To add a new tool:
 ///   1. Create its feature folder under `lib/features/`.
 ///   2. Add a [ToolDefinition] entry below.
-///   3. Add its route in [app_router.dart].
+///   3. Add its route in `app_router.dart`.
 /// That's it — the home grid and drawer auto-populate from this list.
 final List<ToolDefinition> registeredTools = [
   // ── Available Tools ───────────────────────────────────────────────────
@@ -29,6 +29,34 @@ final List<ToolDefinition> registeredTools = [
     accentColor: AppColors.electricPurple,
     secondaryColor: AppColors.accentPink,
     routePath: '/pdf-combiner',
+  ),
+  const ToolDefinition(
+    id: 'pdf_page_manager',
+    title: 'Page Manager',
+    description: 'Reorder, rotate, delete, and extract PDF pages',
+    icon: Icons.pages_outlined,
+    accentColor: AppColors.accentPink,
+    secondaryColor: AppColors.warning,
+    routePath: '/pdf-page-manager',
+  ),
+
+  const ToolDefinition(
+    id: 'pdf_compression',
+    title: 'PDF Compress',
+    description: 'Reduce PDF file size while preserving quality',
+    icon: Icons.compress_rounded,
+    accentColor: AppColors.success,
+    secondaryColor: AppColors.accentCyan,
+    routePath: '/pdf-compression',
+  ),
+  const ToolDefinition(
+    id: 'pdf_security',
+    title: 'PDF Security',
+    description: 'Add or remove password protection',
+    icon: Icons.lock_outline,
+    accentColor: AppColors.electricPurple,
+    secondaryColor: AppColors.accentPink,
+    routePath: '/pdf-security',
   ),
 
   // ── Coming Soon ───────────────────────────────────────────────────────

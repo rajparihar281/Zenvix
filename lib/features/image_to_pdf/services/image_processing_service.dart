@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 
-import '../models/editable_image.dart';
+import 'package:zenvix/features/image_to_pdf/models/editable_image.dart';
 
 /// Handles CPU-intensive image transformations in background isolates
 /// via [compute] to avoid blocking the UI thread.
@@ -29,20 +29,19 @@ class ImageProcessingService {
   }
 
   /// Read original file bytes.
-  Future<Uint8List> _readFile(String path) async {
-    return File(path).readAsBytes();
-  }
+  Future<Uint8List> _readFile(String path) async => File(path).readAsBytes();
 
   /// Read raw file bytes (public, for use from provider).
-  Future<Uint8List> readFileBytes(String path) async {
-    return File(path).readAsBytes();
-  }
+  Future<Uint8List> readFileBytes(String path) async =>
+      File(path).readAsBytes();
 
   // ── Isolate entry point ────────────────────────────────────────────────
 
   static Uint8List _processInIsolate(_ProcessParams params) {
-    img.Image? image = img.decodeImage(params.bytes);
-    if (image == null) return params.bytes;
+    var image = img.decodeImage(params.bytes);
+    if (image == null) {
+      return params.bytes;
+    }
 
     // Rotation
     if (params.rotation != 0) {
@@ -79,14 +78,6 @@ class ImageProcessingService {
 
 /// Parameter bundle for the processing isolate.
 class _ProcessParams {
-  final Uint8List bytes;
-  final double rotation;
-  final bool flipH;
-  final bool flipV;
-  final double brightness;
-  final double contrast;
-  final bool grayscale;
-
   const _ProcessParams({
     required this.bytes,
     required this.rotation,
@@ -96,4 +87,11 @@ class _ProcessParams {
     required this.contrast,
     required this.grayscale,
   });
+  final Uint8List bytes;
+  final double rotation;
+  final bool flipH;
+  final bool flipV;
+  final double brightness;
+  final double contrast;
+  final bool grayscale;
 }

@@ -1,14 +1,15 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../shared/widgets/neon_button.dart';
-import '../providers/image_to_pdf_provider.dart';
-import 'image_editor_screen.dart';
-import 'pdf_options_screen.dart';
-import 'pdf_result_screen.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/image_to_pdf/providers/image_to_pdf_provider.dart';
+import 'package:zenvix/features/image_to_pdf/screens/image_editor_screen.dart';
+import 'package:zenvix/features/image_to_pdf/screens/pdf_options_screen.dart';
+import 'package:zenvix/features/image_to_pdf/screens/pdf_result_screen.dart';
+import 'package:zenvix/shared/widgets/neon_button.dart';
 
 class ImagePreviewScreen extends ConsumerWidget {
   const ImagePreviewScreen({super.key});
@@ -22,7 +23,9 @@ class ImagePreviewScreen extends ConsumerWidget {
       if (next.status == ConversionStatus.done && next.outputPath != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const PdfResultScreen()),
+          MaterialPageRoute<PdfResultScreen>(
+            builder: (_) => const PdfResultScreen(),
+          ),
         );
       }
     });
@@ -35,7 +38,7 @@ class ImagePreviewScreen extends ConsumerWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => notifier.reset(),
+          onPressed: notifier.reset,
         ),
         actions: [
           IconButton(
@@ -135,7 +138,7 @@ class ImagePreviewScreen extends ConsumerWidget {
                           ),
                           onPressed: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<ImageEditorScreen>(
                               builder: (_) => ImageEditorScreen(imageIndex: i),
                             ),
                           ),
@@ -176,7 +179,7 @@ class ImagePreviewScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => showModalBottomSheet(
+                      onPressed: () => showModalBottomSheet<PdfOptionsSheet>(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: AppColors.surface,
@@ -200,7 +203,7 @@ class ImagePreviewScreen extends ConsumerWidget {
                       isLoading: state.status == ConversionStatus.processing,
                       onPressed: state.images.isEmpty
                           ? null
-                          : () => notifier.generatePdf(),
+                          : notifier.generatePdf,
                     ),
                   ),
                 ],
@@ -220,7 +223,7 @@ class ImagePreviewScreen extends ConsumerWidget {
   }
 
   void _showSourcePicker(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(

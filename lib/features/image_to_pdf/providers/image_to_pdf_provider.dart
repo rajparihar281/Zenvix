@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/editable_image.dart';
-import '../models/pdf_options.dart';
-import '../services/image_picker_service.dart';
-import '../services/pdf_generation_service.dart';
+import 'package:zenvix/features/image_to_pdf/models/editable_image.dart';
+import 'package:zenvix/features/image_to_pdf/models/pdf_options.dart';
+import 'package:zenvix/features/image_to_pdf/services/image_picker_service.dart';
+import 'package:zenvix/features/image_to_pdf/services/pdf_generation_service.dart';
 
 // ── State ────────────────────────────────────────────────────────────────
 
@@ -12,13 +12,6 @@ enum ConversionStatus { idle, processing, done, error }
 
 /// Immutable state for the Image → PDF feature.
 class ImageToPdfState {
-  final List<EditableImage> images;
-  final PdfOptions pdfOptions;
-  final ConversionStatus status;
-  final double progress;
-  final String? outputPath;
-  final String? errorMessage;
-
   const ImageToPdfState({
     this.images = const [],
     this.pdfOptions = const PdfOptions(),
@@ -27,6 +20,12 @@ class ImageToPdfState {
     this.outputPath,
     this.errorMessage,
   });
+  final List<EditableImage> images;
+  final PdfOptions pdfOptions;
+  final ConversionStatus status;
+  final double progress;
+  final String? outputPath;
+  final String? errorMessage;
 
   ImageToPdfState copyWith({
     List<EditableImage>? images,
@@ -37,25 +36,22 @@ class ImageToPdfState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) {
-    return ImageToPdfState(
-      images: images ?? this.images,
-      pdfOptions: pdfOptions ?? this.pdfOptions,
-      status: status ?? this.status,
-      progress: progress ?? this.progress,
-      outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-    );
-  }
+  }) => ImageToPdfState(
+    images: images ?? this.images,
+    pdfOptions: pdfOptions ?? this.pdfOptions,
+    status: status ?? this.status,
+    progress: progress ?? this.progress,
+    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 // ── Notifier ─────────────────────────────────────────────────────────────
 
 class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
+  ImageToPdfNotifier() : super(const ImageToPdfState());
   final ImagePickerService _pickerService = ImagePickerService();
   final PdfGenerationService _pdfService = PdfGenerationService();
-
-  ImageToPdfNotifier() : super(const ImageToPdfState());
 
   // ── Image management ─────────────────────────────────────────────────
 
@@ -64,10 +60,9 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
     try {
       final paths = await _pickerService.pickFromGallery();
       _addImagePaths(paths);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         errorMessage: 'Failed to pick images from gallery: $e',
-        clearError: false,
       );
     }
   }
@@ -77,7 +72,7 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
     try {
       final paths = await _pickerService.pickFromFileManager();
       _addImagePaths(paths);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         errorMessage: 'Failed to pick images from files: $e',
       );
@@ -88,14 +83,18 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
   Future<void> addFromCamera() async {
     try {
       final path = await _pickerService.pickFromCamera();
-      if (path != null) _addImagePaths([path]);
-    } catch (e) {
+      if (path != null) {
+        _addImagePaths([path]);
+      }
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Failed to capture image: $e');
     }
   }
 
   void _addImagePaths(List<String> paths) {
-    if (paths.isEmpty) return;
+    if (paths.isEmpty) {
+      return;
+    }
     final newImages = paths.map((p) {
       final id = '${DateTime.now().microsecondsSinceEpoch}_${p.hashCode}';
       return EditableImage(id: id, originalPath: p);
@@ -112,9 +111,9 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
   /// Reorder image from [oldIndex] to [newIndex].
   void reorderImages(int oldIndex, int newIndex) {
     final images = List<EditableImage>.from(state.images);
-    if (newIndex > oldIndex) newIndex--;
+    final targetIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
     final item = images.removeAt(oldIndex);
-    images.insert(newIndex, item);
+    images.insert(targetIndex, item);
     state = state.copyWith(images: images);
   }
 
@@ -158,9 +157,9 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
       state = state.copyWith(
         status: ConversionStatus.done,
         outputPath: outputPath,
-        progress: 1.0,
+        progress: 1,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         status: ConversionStatus.error,
         errorMessage: 'PDF generation failed: $e',

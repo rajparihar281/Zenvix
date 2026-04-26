@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'app_colors.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
 
 /// Zenvix global theme â€” dark OLED-first design.
 class AppTheme {
   AppTheme._();
 
   // â”€â”€ Border Radius Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const double radiusSmall = 8.0;
-  static const double radiusMedium = 12.0;
-  static const double radiusLarge = 16.0;
-  static const double radiusXL = 20.0;
-  static const double radiusRound = 100.0;
+  static const double radiusSmall = 8;
+  static const double radiusMedium = 12;
+  static const double radiusLarge = 16;
+  static const double radiusXL = 20;
+  static const double radiusRound = 100;
 
   // â”€â”€ Spacing Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const double spacingXS = 4.0;
-  static const double spacingSM = 8.0;
-  static const double spacingMD = 16.0;
-  static const double spacingLG = 24.0;
-  static const double spacingXL = 32.0;
-  static const double spacingXXL = 48.0;
+  static const double spacingXS = 4;
+  static const double spacingSM = 8;
+  static const double spacingMD = 16;
+  static const double spacingLG = 24;
+  static const double spacingXL = 32;
+  static const double spacingXXL = 48;
 
   // â”€â”€ Animation Durations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   static const Duration animFast = Duration(milliseconds: 150);
@@ -44,9 +44,7 @@ class AppTheme {
         primary: AppColors.neonBlue,
         secondary: AppColors.electricPurple,
         error: AppColors.error,
-        onPrimary: Colors.black,
         onSecondary: Colors.white,
-        onSurface: AppColors.textPrimary,
         onError: Colors.white,
       ),
 

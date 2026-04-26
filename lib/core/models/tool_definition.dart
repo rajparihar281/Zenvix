@@ -3,8 +3,19 @@ import 'package:flutter/material.dart';
 /// Defines a single tool available in the Zenvix hub.
 ///
 /// Adding a new tool to the app requires creating a [ToolDefinition]
-/// and registering it in [tool_registry.dart] â€” no other wiring needed.
+/// and registering it in `tool_registry.dart` no other wiring needed.
 class ToolDefinition {
+  const ToolDefinition({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.accentColor,
+    required this.secondaryColor,
+    required this.routePath,
+    this.isAvailable = true,
+  });
+
   /// Unique machine-readable identifier (e.g., 'image_to_pdf').
   final String id;
 
@@ -29,15 +40,4 @@ class ToolDefinition {
   /// Whether the tool is implemented and interactive.
   /// When `false`, a "Coming Soon" badge is shown.
   final bool isAvailable;
-
-  const ToolDefinition({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.accentColor,
-    required this.secondaryColor,
-    required this.routePath,
-    this.isAvailable = true,
-  });
 }

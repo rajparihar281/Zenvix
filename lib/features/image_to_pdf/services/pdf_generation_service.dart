@@ -5,9 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import '../models/editable_image.dart';
-import '../models/pdf_options.dart';
-import 'image_processing_service.dart';
+import 'package:zenvix/features/image_to_pdf/models/editable_image.dart';
+import 'package:zenvix/features/image_to_pdf/models/pdf_options.dart';
+import 'package:zenvix/features/image_to_pdf/services/image_processing_service.dart';
 
 /// Generates a multi-page PDF from a list of [EditableImage]s.
 class PdfGenerationService {
@@ -26,7 +26,7 @@ class PdfGenerationService {
 
     final pageFormat = _resolvePageFormat(options);
 
-    for (int i = 0; i < images.length; i++) {
+    for (var i = 0; i < images.length; i++) {
       final editableImage = images[i];
 
       // Process the image (apply edits).
@@ -56,9 +56,7 @@ class PdfGenerationService {
                 ),
               );
             } else {
-              return pw.Center(
-                child: pw.Image(pdfImage, fit: pw.BoxFit.contain),
-              );
+              return pw.Center(child: pw.Image(pdfImage));
             }
           },
         ),

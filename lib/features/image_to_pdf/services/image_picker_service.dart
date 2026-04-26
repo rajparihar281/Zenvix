@@ -19,7 +19,9 @@ class ImagePickerService {
       type: FileType.image,
       allowMultiple: true,
     );
-    if (result == null) return [];
+    if (result == null) {
+      return [];
+    }
     return result.paths.whereType<String>().toList();
   }
 

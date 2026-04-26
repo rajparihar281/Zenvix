@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 
-import '../../core/models/tool_definition.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:zenvix/core/models/tool_definition.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
 
 /// Premium feature card rendered from a [ToolDefinition].
 ///
 /// Shows icon, title, description, and a "Coming Soon" badge
 /// for tools that are not yet available.  Animates border glow on press.
 class ToolCard extends StatefulWidget {
+  const ToolCard({super.key, required this.tool, this.onTap});
   final ToolDefinition tool;
   final VoidCallback? onTap;
-
-  const ToolCard({super.key, required this.tool, this.onTap});
 
   @override
   State<ToolCard> createState() => _ToolCardState();
@@ -31,7 +30,9 @@ class _ToolCardState extends State<ToolCard>
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
         setState(() => _isPressed = false);
-        if (tool.isAvailable) widget.onTap?.call();
+        if (tool.isAvailable) {
+          widget.onTap?.call();
+        }
       },
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedContainer(
@@ -52,7 +53,6 @@ class _ToolCardState extends State<ToolCard>
             color: _isPressed && tool.isAvailable
                 ? tool.accentColor.withValues(alpha: 0.5)
                 : AppColors.surfaceBorder.withValues(alpha: 0.5),
-            width: 1,
           ),
           boxShadow: _isPressed && tool.isAvailable
               ? [
@@ -88,7 +88,6 @@ class _ToolCardState extends State<ToolCard>
                       ),
                       border: Border.all(
                         color: tool.accentColor.withValues(alpha: 0.3),
-                        width: 1,
                       ),
                     ),
                     child: Icon(tool.icon, color: tool.accentColor, size: 24),

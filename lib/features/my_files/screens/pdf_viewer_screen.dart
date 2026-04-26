@@ -1,18 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-
-import '../../../core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
 
 class PdfViewerScreen extends StatelessWidget {
-  final String filePath;
-  final String fileName;
-
   const PdfViewerScreen({
     super.key,
     required this.filePath,
     required this.fileName,
   });
+
+  final String filePath;
+  final String fileName;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +24,7 @@ class PdfViewerScreen extends StatelessWidget {
         backgroundColor: AppColors.surface,
       ),
       body: FutureBuilder<bool>(
+        // ignore: avoid_slow_async_io
         future: file.exists(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -36,8 +36,6 @@ class PdfViewerScreen extends StatelessWidget {
           if (snapshot.hasData && snapshot.data == true) {
             return PdfPreview(
               build: (format) => file.readAsBytesSync(),
-              allowPrinting: true,
-              allowSharing: true,
               canChangeOrientation: false,
               canChangePageFormat: false,
               canDebug: false,

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/constants/app_strings.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/app_theme.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/router/app_router.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,13 +26,11 @@ class ZenvixApp extends StatelessWidget {
   const ZenvixApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppStrings.appName,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      initialRoute: '/',
-      onGenerateRoute: AppRouter.onGenerateRoute,
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+    title: AppStrings.appName,
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.darkTheme,
+    initialRoute: '/',
+    onGenerateRoute: AppRouter.onGenerateRoute,
+  );
 }

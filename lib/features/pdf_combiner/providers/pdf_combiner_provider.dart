@@ -1,22 +1,21 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/pdf_file_item.dart';
-import '../services/pdf_combine_service.dart';
+import 'package:zenvix/features/pdf_combiner/models/pdf_file_item.dart';
+import 'package:zenvix/features/pdf_combiner/services/pdf_combine_service.dart';
 
 enum CombineStatus { idle, processing, done, error }
 
 class PdfCombinerState {
-  final List<PdfFileItem> files;
-  final CombineStatus status;
-  final String? outputPath;
-  final String? errorMessage;
-
   const PdfCombinerState({
     this.files = const [],
     this.status = CombineStatus.idle,
     this.outputPath,
     this.errorMessage,
   });
+  final List<PdfFileItem> files;
+  final CombineStatus status;
+  final String? outputPath;
+  final String? errorMessage;
 
   PdfCombinerState copyWith({
     List<PdfFileItem>? files,
@@ -25,19 +24,17 @@ class PdfCombinerState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) {
-    return PdfCombinerState(
-      files: files ?? this.files,
-      status: status ?? this.status,
-      outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-    );
-  }
+  }) => PdfCombinerState(
+    files: files ?? this.files,
+    status: status ?? this.status,
+    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
-  final PdfCombineService _service = PdfCombineService();
   PdfCombinerNotifier() : super(const PdfCombinerState());
+  final PdfCombineService _service = PdfCombineService();
 
   /// Pick PDF files from the file manager.
   Future<void> pickPdfs() async {
@@ -47,19 +44,24 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
         allowedExtensions: ['pdf'],
         allowMultiple: true,
       );
-      if (result == null) return;
+      if (result == null) {
+        return;
+      }
 
-      final newFiles = result.files.where((f) => f.path != null).map((f) {
-        return PdfFileItem(
-          id: '${DateTime.now().microsecondsSinceEpoch}_${f.name.hashCode}',
-          name: f.name,
-          path: f.path!,
-          sizeBytes: f.size,
-        );
-      }).toList();
+      final newFiles = result.files
+          .where((f) => f.path != null)
+          .map(
+            (f) => PdfFileItem(
+              id: '${DateTime.now().microsecondsSinceEpoch}_${f.name.hashCode}',
+              name: f.name,
+              path: f.path!,
+              sizeBytes: f.size,
+            ),
+          )
+          .toList();
 
       state = state.copyWith(files: [...state.files, ...newFiles]);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Failed to pick PDFs: $e');
     }
   }
@@ -71,9 +73,9 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
 
   void reorderFiles(int oldIndex, int newIndex) {
     final files = List<PdfFileItem>.from(state.files);
-    if (newIndex > oldIndex) newIndex--;
+    final targetIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
     final item = files.removeAt(oldIndex);
-    files.insert(newIndex, item);
+    files.insert(targetIndex, item);
     state = state.copyWith(files: files);
   }
 
@@ -93,7 +95,7 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
       final paths = state.files.map((f) => f.path).toList();
       final output = await _service.combinePdfs(paths);
       state = state.copyWith(status: CombineStatus.done, outputPath: output);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(
         status: CombineStatus.error,
         errorMessage: 'Merge failed: $e',
@@ -102,10 +104,12 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
   }
 
   Future<String?> saveMergedPdf(String desiredName) async {
-    if (state.outputPath == null) return null;
+    if (state.outputPath == null) {
+      return null;
+    }
     try {
       return await _service.saveToDevice(state.outputPath!, desiredName);
-    } catch (e) {
+    } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Save failed: $e');
       return null;
     }

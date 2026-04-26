@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_strings.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
 
 /// Specification for a single drawer menu item.
 class _DrawerItem {
-  final IconData icon;
-  final String label;
-  final String? route;
-  final bool enabled;
-  final bool isCurrent;
-
   const _DrawerItem({
     required this.icon,
     required this.label,
@@ -19,13 +13,17 @@ class _DrawerItem {
     this.enabled = true,
     this.isCurrent = false,
   });
+  final IconData icon;
+  final String label;
+  final String? route;
+  final bool enabled;
+  final bool isCurrent;
 }
 
 /// Premium OLED drawer with gradient header, menu items, and footer.
 class AppDrawer extends StatelessWidget {
-  final String currentRoute;
-
   const AppDrawer({super.key, this.currentRoute = '/'});
+  final String currentRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +34,10 @@ class AppDrawer extends StatelessWidget {
         route: '/',
         isCurrent: currentRoute == '/',
       ),
-      _DrawerItem(
+      const _DrawerItem(
         icon: Icons.grid_view_outlined,
         label: AppStrings.drawerAllTools,
         route: '/',
-        isCurrent: false,
       ),
       _DrawerItem(
         icon: Icons.folder_outlined,
@@ -48,17 +45,17 @@ class AppDrawer extends StatelessWidget {
         route: '/my-files',
         isCurrent: currentRoute == '/my-files',
       ),
-      _DrawerItem(
+      const _DrawerItem(
         icon: Icons.favorite_outline,
         label: AppStrings.drawerFavorites,
         enabled: false,
       ),
-      _DrawerItem(
+      const _DrawerItem(
         icon: Icons.settings_outlined,
         label: AppStrings.drawerSettings,
         enabled: false,
       ),
-      _DrawerItem(
+      const _DrawerItem(
         icon: Icons.info_outline,
         label: AppStrings.drawerAbout,
         route: '/about',
@@ -164,79 +161,74 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(BuildContext context, _DrawerItem item) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Material(
-        color: item.isCurrent
-            ? AppColors.neonBlue.withValues(alpha: 0.08)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        child: ListTile(
-          leading: Icon(
-            item.icon,
+  Widget _buildMenuItem(BuildContext context, _DrawerItem item) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 2),
+    child: Material(
+      color: item.isCurrent
+          ? AppColors.neonBlue.withValues(alpha: 0.08)
+          : Colors.transparent,
+      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+      child: ListTile(
+        leading: Icon(
+          item.icon,
+          color: item.isCurrent
+              ? AppColors.neonBlue
+              : item.enabled
+              ? AppColors.textSecondary
+              : AppColors.textDisabled,
+          size: 22,
+        ),
+        title: Text(
+          item.label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: item.isCurrent ? FontWeight.w600 : FontWeight.w500,
             color: item.isCurrent
                 ? AppColors.neonBlue
                 : item.enabled
-                ? AppColors.textSecondary
+                ? AppColors.textPrimary
                 : AppColors.textDisabled,
-            size: 22,
           ),
-          title: Text(
-            item.label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: item.isCurrent ? FontWeight.w600 : FontWeight.w500,
-              color: item.isCurrent
-                  ? AppColors.neonBlue
-                  : item.enabled
-                  ? AppColors.textPrimary
-                  : AppColors.textDisabled,
-            ),
-          ),
-          trailing: !item.enabled
-              ? Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
+        ),
+        trailing: !item.enabled
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceLight,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                ),
+                child: const Text(
+                  'SOON',
+                  style: TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textDisabled,
+                    letterSpacing: 1,
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  ),
-                  child: const Text(
-                    'SOON',
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textDisabled,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                )
-              : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          ),
-          onTap: item.enabled && item.route != null
-              ? () {
-                  Navigator.pop(context); // close drawer
-                  if (item.route != currentRoute) {
-                    if (item.route == '/about') {
-                      _showAboutDialog(context);
-                    } else {
-                      Navigator.pushReplacementNamed(context, item.route!);
-                    }
+                ),
+              )
+            : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+        ),
+        onTap: item.enabled && item.route != null
+            ? () {
+                Navigator.pop(context); // close drawer
+                if (item.route != currentRoute) {
+                  if (item.route == '/about') {
+                    _showAboutDialog(context);
+                  } else {
+                    Navigator.pushReplacementNamed(context, item.route!);
                   }
                 }
-              : null,
-        ),
+              }
+            : null,
       ),
-    );
-  }
+    ),
+  );
 
   void _showAboutDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text(AppStrings.appName),

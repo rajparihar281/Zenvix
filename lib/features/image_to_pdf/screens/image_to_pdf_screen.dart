@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
+import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/image_to_pdf/providers/image_to_pdf_provider.dart';
+import 'package:zenvix/features/image_to_pdf/screens/image_preview_screen.dart';
+import 'package:zenvix/shared/widgets/error_snackbar.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../shared/widgets/error_snackbar.dart';
-import '../providers/image_to_pdf_provider.dart';
-import 'image_preview_screen.dart';
-
-/// Entry screen for Image → PDF.
-///
-/// Shows an empty state with a pulsing "+" button and a bottom sheet
-/// to choose the image source (gallery, files, camera).
 class ImageToPdfScreen extends ConsumerStatefulWidget {
   const ImageToPdfScreen({super.key});
 
@@ -31,7 +26,7 @@ class _ImageToPdfScreenState extends ConsumerState<ImageToPdfScreen>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+    _pulseAnimation = Tween<double>(begin: 0.8, end: 1).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
   }
@@ -79,12 +74,8 @@ class _ImageToPdfScreenState extends ConsumerState<ImageToPdfScreen>
             // Pulsing add button
             AnimatedBuilder(
               animation: _pulseAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _pulseAnimation.value,
-                  child: child,
-                );
-              },
+              builder: (context, child) =>
+                  Transform.scale(scale: _pulseAnimation.value, child: child),
               child: GestureDetector(
                 onTap: () => _showSourcePicker(context),
                 child: Container(
@@ -132,7 +123,7 @@ class _ImageToPdfScreenState extends ConsumerState<ImageToPdfScreen>
   }
 
   void _showSourcePicker(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -203,47 +194,44 @@ class _ImageToPdfScreenState extends ConsumerState<ImageToPdfScreen>
 
 /// A single row in the source picker bottom sheet.
 class _SourceOption extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
   const _SourceOption({
     required this.icon,
     required this.label,
     required this.color,
     required this.onTap,
   });
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        ),
-        child: Icon(icon, color: color, size: 22),
-      ),
-      title: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-        ),
-      ),
-      trailing: Icon(
-        Icons.chevron_right_rounded,
-        color: AppColors.textTertiary,
-        size: 20,
-      ),
-      shape: RoundedRectangleBorder(
+  Widget build(BuildContext context) => ListTile(
+    leading: Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
       ),
-      onTap: onTap,
-    );
-  }
+      child: Icon(icon, color: color, size: 22),
+    ),
+    title: Text(
+      label,
+      style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+        color: AppColors.textPrimary,
+      ),
+    ),
+    trailing: const Icon(
+      Icons.chevron_right_rounded,
+      color: AppColors.textTertiary,
+      size: 20,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+    ),
+    onTap: onTap,
+  );
 }
