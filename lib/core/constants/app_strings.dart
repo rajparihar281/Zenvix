@@ -7,7 +7,7 @@ class AppStrings {
   // â”€â”€ App â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   static const String appName = 'Zenvix';
   static const String appTagline = 'Your pocket toolkit,\nforged for power.';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.1.0';
 
   // â”€â”€ Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   static const String drawerHome = 'Home';
@@ -88,4 +88,23 @@ class AppStrings {
   static const String aboutDescription =
       'Zenvix is a premium multi-tool utility app designed for power users. '
       'Built using Flutter.';
+
+  // ── PDF Compression ───────────────────────────────────────────────────
+  static const String pdfCompression = 'PDF Compression';
+  static const String compressionSuccess = 'Compression Complete!';
+  static const String compressAnother = 'Compress Another';
+
+  // ── PDF Security ─────────────────────────────────────────────────────
+  static const String pdfSecurity = 'PDF Security';
+  static const String protectSuccess = 'PDF Protected Successfully!';
+  static const String unlockSuccess = 'PDF Unlocked Successfully!';
+  static const String processAnother = 'Process Another';
+
+  // ── Enhanced Errors ──────────────────────────────────────────────────
+  static const String errorLargeFile =
+      'This file is very large and may take longer to process.';
+  static const String errorCorruptPdf =
+      'This PDF appears to be corrupted or invalid.';
+  static const String errorWrongPassword =
+      'Incorrect password. Please check and try again.';
 }

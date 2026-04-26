@@ -40,6 +40,25 @@ final List<ToolDefinition> registeredTools = [
     routePath: '/pdf-page-manager',
   ),
 
+  const ToolDefinition(
+    id: 'pdf_compression',
+    title: 'PDF Compress',
+    description: 'Reduce PDF file size while preserving quality',
+    icon: Icons.compress_rounded,
+    accentColor: AppColors.success,
+    secondaryColor: AppColors.accentCyan,
+    routePath: '/pdf-compression',
+  ),
+  const ToolDefinition(
+    id: 'pdf_security',
+    title: 'PDF Security',
+    description: 'Add or remove password protection',
+    icon: Icons.lock_outline,
+    accentColor: AppColors.electricPurple,
+    secondaryColor: AppColors.accentPink,
+    routePath: '/pdf-security',
+  ),
+
   // ── Coming Soon ───────────────────────────────────────────────────────
   const ToolDefinition(
     id: 'pdf_to_image',
