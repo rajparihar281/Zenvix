@@ -175,6 +175,19 @@ class PdfCompressionResultScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    ref.read(pdfCompressionProvider.notifier).reset();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.pushNamed(context, '/my-files');
+                  },
+                  icon: const Icon(Icons.folder_open_rounded, size: 18),
+                  label: const Text('Go to Folder'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                ),
+                const SizedBox(height: AppTheme.spacingSM),
                 TextButton(
                   onPressed: () {
                     ref.read(pdfCompressionProvider.notifier).reset();
