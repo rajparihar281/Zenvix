@@ -50,5 +50,29 @@ ture and routing setup.
 - [x] **Extract Pages**: Select multiple pages and extract them into a new PDF.
 - [x] **Export & Share**: Save the modified PDF with custom renaming and share support.
 
+### 🗜️ PDF Compression Feature
+- [x] **Domain Model**: `CompressionLevel` enum with Low / Medium / High presets (JPEG quality 75 / 50 / 25).
+- [x] **Compression Service**: Rasterizes pages via `printing`, re-encodes to JPEG in an isolate (`compute`), assembles new PDF via `syncfusion_flutter_pdf`. DPI scales with quality level.
+- [x] **Size Estimation**: Instant estimated output size shown before compression runs.
+- [x] **Progress Indicator**: Per-page percentage progress bar during compression.
+- [x] **Riverpod Provider**: `PdfCompressionNotifier` / `PdfCompressionState` with `idle → loading → compressing → done / error` lifecycle.
+- [x] **Compression Screen**: File picker, level selector (animated cards), size preview card, progress bar, change-file action.
+- [x] **Result Screen**: Success icon, real size comparison widget, Share / Save to Device / **Go to Folder** / Compress Another actions.
+
+### 🔒 PDF Security Feature
+- [x] **Domain Models**: `SecurityMode` enum (protect / unlock), `SecurityPermissions` (allowPrinting, allowCopying).
+- [x] **Security Service**: AES-256 encryption via `syncfusion_flutter_pdf`; graceful wrong-password detection on unlock.
+- [x] **Riverpod Provider**: `PdfSecurityNotifier` / `PdfSecurityState` with full lifecycle and error propagation.
+- [x] **Security Screen**: Mode selector (protect / unlock), password fields with visibility toggle, owner password (optional), permission toggles (print / copy).
+- [x] **Result Screen**: Mode-aware icon/colour, Share / Save to Device / **Go to Folder** / Process Another actions.
+
+### 🎨 UX & Stability Improvements
+- [x] **Progress Indicators**: Percentage-based progress bar replaces generic loaders in compression flow.
+- [x] **Success Screens**: All result screens include Open (via My Files), Share, Save to Device, and Go to Folder actions.
+- [x] **Error Handling**: Typed error messages for wrong password, corrupt PDF, large file, permission denial, and generic failures — surfaced via themed snackbars with optional retry.
+- [x] **Router**: `/pdf-compression` and `/pdf-security` routes registered in `AppRouter`.
+- [x] **Tool Registry**: Both new tools registered in `tool_registry.dart` with accent colours and icons.
+- [x] **AppStrings**: All new user-facing strings centralised.
+
 ---
-*Last Updated: 2026-04-24*
+*Last Updated: 2026-04-25*
