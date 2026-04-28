@@ -42,7 +42,12 @@ dependencies:
   vector_math: ^2.2.0
   syncfusion_flutter_pdf: ^33.2.3
   reorderable_grid_view: ^2.2.8
-  
+
+  # QR tools
+  mobile_scanner: ^7.0.1
+  qr_flutter: ^4.1.0
+  url_launcher: ^6.3.1
+
   #logo
   flutter_launcher_icons: ^0.14.4
 

@@ -26,8 +26,6 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
     super.initState();
     _controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
-      facing: CameraFacing.back,
-      torchEnabled: false,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(qrScannerProvider.notifier).startScanning();
@@ -95,13 +93,13 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
         ),
         actions: [
           IconButton(
-            icon: ValueListenableBuilder<TorchState>(
-              valueListenable: _controller.torchState,
-              builder: (_, torchState, __) => Icon(
-                torchState == TorchState.on
+            icon: ValueListenableBuilder<MobileScannerState>(
+              valueListenable: _controller,
+              builder: (_, scannerState, _) => Icon(
+                scannerState.torchState == TorchState.on
                     ? Icons.flash_on_rounded
                     : Icons.flash_off_rounded,
-                color: torchState == TorchState.on
+                color: scannerState.torchState == TorchState.on
                     ? AppColors.warning
                     : AppColors.textSecondary,
               ),
@@ -117,7 +115,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
                 MobileScanner(
                   controller: _controller,
                   onDetect: _onDetect,
-                  errorBuilder: (context, error, child) => _CameraErrorView(
+                  errorBuilder: (context, error) => _CameraErrorView(
                     error: error.errorCode.name,
                     onRetry: _resumeScan,
                   ),
@@ -268,12 +266,15 @@ class _ResultSheet extends StatelessWidget {
                   color: AppColors.neonBlue,
                   onTap: () async {
                     final uri = Uri.tryParse(result.rawValue);
+                    
                     if (uri != null && await canLaunchUrl(uri)) {
-                      Navigator.pop(context);
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
+                      if(context.mounted){
+                        Navigator.pop(context);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }                      
                     }
                   },
                 ),
