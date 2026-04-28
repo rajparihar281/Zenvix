@@ -6,6 +6,7 @@ import 'package:zenvix/features/pdf_combiner/screens/pdf_combiner_screen.dart';
 import 'package:zenvix/features/pdf_compression/presentation/screens/pdf_compression_screen.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart';
 import 'package:zenvix/features/pdf_security/presentation/screens/pdf_security_screen.dart';
+import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.dart';
 
 // ignore_for_file: avoid_classes_with_only_static_members
 
@@ -27,6 +28,8 @@ class AppRouter {
         return _buildRoute(const PdfCompressionScreen(), settings);
       case '/pdf-security':
         return _buildRoute(const PdfSecurityScreen(), settings);
+      case '/qr-tools':
+        return _buildRoute(const QrToolsScreen(), settings);
       default:
         return _buildRoute(const HomeScreen(), settings);
     }
