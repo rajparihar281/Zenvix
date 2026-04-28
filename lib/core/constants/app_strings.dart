@@ -107,4 +107,15 @@ class AppStrings {
       'This PDF appears to be corrupted or invalid.';
   static const String errorWrongPassword =
       'Incorrect password. Please check and try again.';
+
+  // ── QR Tools ─────────────────────────────────────────────────────────
+  static const String qrTools = 'QR Tools';
+  static const String qrScanner = 'QR Scanner';
+  static const String qrGenerator = 'QR Generator';
+  static const String qrScannerDesc = 'Scan QR codes with your camera';
+  static const String qrGeneratorDesc = 'Create QR codes from text or URL';
+  static const String errorCameraPermission =
+      'Camera permission denied. Please grant access in Settings.';
+  static const String errorInvalidQr = 'Could not read QR code data.';
+  static const String errorQrGeneration = 'Failed to generate QR code.';
 }

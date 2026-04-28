@@ -58,6 +58,15 @@ final List<ToolDefinition> registeredTools = [
     secondaryColor: AppColors.accentPink,
     routePath: '/pdf-security',
   ),
+  const ToolDefinition(
+    id: 'qr_tools',
+    title: 'QR Tools',
+    description: 'Scan and generate QR codes instantly',
+    icon: Icons.qr_code_2_outlined,
+    accentColor: AppColors.warning,
+    secondaryColor: AppColors.accentCyan,
+    routePath: '/qr-tools',
+  ),
 
   // ── Coming Soon ───────────────────────────────────────────────────────
   const ToolDefinition(
@@ -87,7 +96,7 @@ final List<ToolDefinition> registeredTools = [
     icon: Icons.qr_code_2_outlined,
     accentColor: AppColors.warning,
     secondaryColor: AppColors.accentPink,
-    routePath: '/qr-generator',
+    routePath: '/qr-tools',
     isAvailable: false,
   ),
   const ToolDefinition(
