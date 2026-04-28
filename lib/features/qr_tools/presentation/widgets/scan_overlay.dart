@@ -100,7 +100,7 @@ class _OverlayPainter extends CustomPainter {
     double b,
     Paint paint,
   ) {
-    final cl = _cornerLen;
+    const cl = _cornerLen;
     // Top-left
     canvas
       ..drawLine(Offset(l, t + cl), Offset(l, t), paint)

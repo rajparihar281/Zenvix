@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-/// Renders a QR code for [data] to raw PNG bytes.
+/// Renders a QR code for `data` to raw PNG bytes.
 ///
-/// The caller is responsible for providing a valid [repaintKey] whose
+/// The caller is responsible for providing a valid `repaintKey` whose
 /// subtree contains a [QrImageView] wrapped in a [RepaintBoundary].
 class QrGeneratorService {
   /// Captures the widget tree under [key] as PNG bytes.
@@ -44,7 +45,6 @@ class QrGeneratorService {
     required int backgroundColor,
   }) => QrImageView(
     data: data,
-    version: QrVersions.auto,
     size: size,
     eyeStyle: QrEyeStyle(
       eyeShape: QrEyeShape.square,

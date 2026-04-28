@@ -5,12 +5,6 @@ enum QrContentType { url, email, phone, text }
 class QrResult {
   const QrResult({required this.rawValue, required this.type});
 
-  /// The raw string decoded from the QR code.
-  final String rawValue;
-
-  /// Detected content type.
-  final QrContentType type;
-
   /// Derives the content type from [raw] using simple prefix detection.
   factory QrResult.fromRaw(String raw) {
     final lower = raw.toLowerCase();
@@ -26,6 +20,12 @@ class QrResult {
     }
     return QrResult(rawValue: raw, type: type);
   }
+
+  /// The raw string decoded from the QR code.
+  final String rawValue;
+
+  /// Detected content type.
+  final QrContentType type;
 
   /// Display-friendly value (strips scheme prefixes for email/phone).
   String get displayValue {
