@@ -248,7 +248,6 @@ class _QrPreview extends StatelessWidget {
                 key: repaintKey,
                 child: QrImageView(
                   data: state.inputText,
-                  version: QrVersions.auto,
                   size: 240,
                   eyeStyle: QrEyeStyle(
                     eyeShape: QrEyeShape.square,
@@ -299,17 +298,6 @@ class _ColorRow extends StatelessWidget {
   final Color bgColor;
   final ValueChanged<Color> onFgChanged;
   final ValueChanged<Color> onBgChanged;
-
-  static const _presets = <Color>[
-    Colors.white,
-    Colors.black,
-    AppColors.neonBlue,
-    AppColors.electricPurple,
-    AppColors.accentCyan,
-    AppColors.accentPink,
-    AppColors.success,
-    AppColors.warning,
-  ];
 
   @override
   Widget build(BuildContext context) => Column(
