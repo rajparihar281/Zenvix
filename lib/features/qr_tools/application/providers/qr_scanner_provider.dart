@@ -41,7 +41,8 @@ class QrScannerNotifier extends StateNotifier<QrScannerState> {
   void onPermissionDenied() {
     state = state.copyWith(
       status: ScannerStatus.permissionDenied,
-      errorMessage: 'Camera permission denied. Please grant access in Settings.',
+      errorMessage:
+          'Camera permission denied. Please grant access in Settings.',
     );
   }
 

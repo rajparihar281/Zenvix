@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/features/image_to_pdf/models/editable_image.dart';
 import 'package:zenvix/features/image_to_pdf/models/pdf_options.dart';
 import 'package:zenvix/features/image_to_pdf/services/image_picker_service.dart';
@@ -36,20 +40,23 @@ class ImageToPdfState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) => ImageToPdfState(
-    images: images ?? this.images,
-    pdfOptions: pdfOptions ?? this.pdfOptions,
-    status: status ?? this.status,
-    progress: progress ?? this.progress,
-    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-  );
+  }) =>
+      ImageToPdfState(
+        images: images ?? this.images,
+        pdfOptions: pdfOptions ?? this.pdfOptions,
+        status: status ?? this.status,
+        progress: progress ?? this.progress,
+        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      );
 }
 
 // ── Notifier ─────────────────────────────────────────────────────────────
 
 class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
-  ImageToPdfNotifier() : super(const ImageToPdfState());
+  ImageToPdfNotifier(this._ref) : super(const ImageToPdfState());
+
+  final Ref _ref;
   final ImagePickerService _pickerService = ImagePickerService();
   final PdfGenerationService _pdfService = PdfGenerationService();
 
@@ -132,6 +139,7 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
 
   // ── Conversion ───────────────────────────────────────────────────────
 
+  /// Generate PDF into a temp path (no user prompt yet).
   Future<void> generatePdf() async {
     if (state.images.isEmpty) {
       state = state.copyWith(errorMessage: 'No images selected');
@@ -146,7 +154,7 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
     );
 
     try {
-      final outputPath = await _pdfService.generatePdf(
+      final tempPath = await _pdfService.generatePdf(
         images: state.images,
         options: state.pdfOptions,
         onProgress: (p) {
@@ -156,7 +164,7 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
 
       state = state.copyWith(
         status: ConversionStatus.done,
-        outputPath: outputPath,
+        outputPath: tempPath,
         progress: 1,
       );
     } on Exception catch (e) {
@@ -164,6 +172,46 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
         status: ConversionStatus.error,
         errorMessage: 'PDF generation failed: $e',
       );
+    }
+  }
+
+  /// Save the generated temp PDF to [directoryPath] with the given [location].
+  ///
+  /// Returns the final saved path, or null on failure.
+  Future<String?> savePdfTo({
+    required String directoryPath,
+    required SaveLocation location,
+  }) async {
+    final tempPath = state.outputPath;
+    if (tempPath == null) {
+      return null;
+    }
+    try {
+      final storage = _ref.read(storageServiceProvider);
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = StorageService.ensureExtension(
+        'Zenvix_$timestamp',
+        '.pdf',
+      );
+
+      final result = await storage.copyFile(
+        sourcePath: tempPath,
+        fileName: fileName,
+        directoryPath: directoryPath,
+        location: location,
+      );
+
+      // Clean up the temp file.
+      final tmp = File(tempPath);
+      if (tmp.existsSync()) {
+        await tmp.delete();
+      }
+
+      state = state.copyWith(outputPath: result.savedPath);
+      return result.savedPath;
+    } on Exception catch (e) {
+      state = state.copyWith(errorMessage: 'Save failed: $e');
+      return null;
     }
   }
 
@@ -182,5 +230,5 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
 
 final imageToPdfProvider =
     StateNotifierProvider<ImageToPdfNotifier, ImageToPdfState>(
-      (ref) => ImageToPdfNotifier(),
-    );
+  ImageToPdfNotifier.new,
+);

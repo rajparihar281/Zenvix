@@ -67,6 +67,15 @@ final List<ToolDefinition> registeredTools = [
     secondaryColor: AppColors.accentCyan,
     routePath: '/qr-tools',
   ),
+  const ToolDefinition(
+    id: 'ocr_text_extractor',
+    title: 'Text Extractor',
+    description: 'Extract text from images and PDFs',
+    icon: Icons.document_scanner_outlined,
+    accentColor: AppColors.neonBlue,
+    secondaryColor: AppColors.electricPurple,
+    routePath: '/ocr',
+  ),
 
   // ── Coming Soon ───────────────────────────────────────────────────────
   const ToolDefinition(

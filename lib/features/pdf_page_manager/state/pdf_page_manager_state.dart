@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/features/pdf_page_manager/models/pdf_page_item.dart';
 import 'package:zenvix/features/pdf_page_manager/services/pdf_page_manager_service.dart';
 
@@ -40,20 +44,23 @@ class PdfPageManagerState {
     Set<String>? selectedPageIds,
     bool clearOutput = false,
     bool clearError = false,
-  }) => PdfPageManagerState(
-    originalPdfPath: originalPdfPath ?? this.originalPdfPath,
-    originalPdfName: originalPdfName ?? this.originalPdfName,
-    originalPdfData: originalPdfData ?? this.originalPdfData,
-    pages: pages ?? this.pages,
-    status: status ?? this.status,
-    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-    selectedPageIds: selectedPageIds ?? this.selectedPageIds,
-  );
+  }) =>
+      PdfPageManagerState(
+        originalPdfPath: originalPdfPath ?? this.originalPdfPath,
+        originalPdfName: originalPdfName ?? this.originalPdfName,
+        originalPdfData: originalPdfData ?? this.originalPdfData,
+        pages: pages ?? this.pages,
+        status: status ?? this.status,
+        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+        selectedPageIds: selectedPageIds ?? this.selectedPageIds,
+      );
 }
 
 class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
-  PdfPageManagerNotifier() : super(const PdfPageManagerState());
+  PdfPageManagerNotifier(this._ref) : super(const PdfPageManagerState());
+
+  final Ref _ref;
   final PdfPageManagerService _service = PdfPageManagerService();
 
   /// Pick a PDF file to manage
@@ -158,18 +165,24 @@ class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
     }
   }
 
-  Future<void> savePdf(String desiredName) async {
+  /// Export PDF bytes and save them to [directoryPath].
+  ///
+  /// Returns the final saved path, or null on failure.
+  Future<String?> savePdfTo({
+    required String desiredName,
+    required String directoryPath,
+    required SaveLocation location,
+  }) async {
     if (state.pages.isEmpty) {
       state = state.copyWith(errorMessage: 'No pages to save.');
-      return;
+      return null;
     }
 
     if (state.originalPdfData == null) {
       state = state.copyWith(errorMessage: 'Original PDF data missing.');
-      return;
+      return null;
     }
 
-    // If there are selected pages, extract only those. Otherwise save all pages in current order.
     final pagesToSave = state.selectedPageIds.isNotEmpty
         ? state.pages
               .where((p) => state.selectedPageIds.contains(p.id))
@@ -183,21 +196,31 @@ class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
     );
 
     try {
-      final outputPath = await _service.exportPdf(
+      final bytes = await _service.exportPdfBytes(
         originalPdfData: state.originalPdfData!,
         finalPages: pagesToSave,
-        desiredName: desiredName,
+      );
+
+      final storage = _ref.read(storageServiceProvider);
+      final fileName = StorageService.ensureExtension(desiredName, '.pdf');
+      final result = await storage.saveBytes(
+        bytes: bytes,
+        fileName: fileName,
+        directoryPath: directoryPath,
+        location: location,
       );
 
       state = state.copyWith(
         status: PageManagerStatus.done,
-        outputPath: outputPath,
+        outputPath: result.savedPath,
       );
+      return result.savedPath;
     } on Exception catch (e) {
       state = state.copyWith(
         status: PageManagerStatus.error,
         errorMessage: 'Failed to export PDF: $e',
       );
+      return null;
     }
   }
 
@@ -207,5 +230,5 @@ class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
 
 final pdfPageManagerProvider =
     StateNotifierProvider<PdfPageManagerNotifier, PdfPageManagerState>(
-      (ref) => PdfPageManagerNotifier(),
-    );
+  PdfPageManagerNotifier.new,
+);

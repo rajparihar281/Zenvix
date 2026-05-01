@@ -45,10 +45,7 @@ class QrToolsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppTheme.spacingMD),
-          Text(
-            'QR Tools',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text('QR Tools', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: AppTheme.spacingXS),
           Text(
             'Scan or generate QR codes instantly',
@@ -115,9 +112,7 @@ class _ToolCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppTheme.spacingLG),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-          border: Border.all(
-            color: accentColor.withValues(alpha: 0.25),
-          ),
+          border: Border.all(color: accentColor.withValues(alpha: 0.25)),
         ),
         child: Row(
           children: [
@@ -135,15 +130,9 @@ class _ToolCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text(title, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
             ),

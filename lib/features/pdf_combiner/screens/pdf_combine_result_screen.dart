@@ -1,40 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+
 import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 import 'package:zenvix/features/pdf_combiner/providers/pdf_combiner_provider.dart';
 import 'package:zenvix/shared/widgets/error_snackbar.dart';
 import 'package:zenvix/shared/widgets/neon_button.dart';
+import 'package:zenvix/shared/widgets/save_location_sheet.dart';
 
 class PdfCombineResultScreen extends ConsumerWidget {
   const PdfCombineResultScreen({super.key});
 
-  Future<void> _showSaveDialog(BuildContext context, WidgetRef ref) async {
-    final controller = TextEditingController(
+  Future<void> _handleSave(BuildContext context, WidgetRef ref) async {
+    final nameController = TextEditingController(
       text: 'Merged_PDF_${DateTime.now().millisecondsSinceEpoch}',
     );
 
-    return showDialog(
+    // 1 ── Ask for a file name.
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: const Text(
-          'Save PDF',
+          'File Name',
           style: TextStyle(color: AppColors.textPrimary),
         ),
         content: TextField(
-          controller: controller,
+          controller: nameController,
           style: const TextStyle(color: AppColors.textPrimary),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'File Name',
             suffixText: '.pdf',
-            labelStyle: const TextStyle(color: AppColors.textSecondary),
-            enabledBorder: const UnderlineInputBorder(
+            labelStyle: TextStyle(color: AppColors.textSecondary),
+            enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.surfaceBorder),
             ),
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.electricPurple),
             ),
           ),
@@ -42,7 +47,7 @@ class PdfCombineResultScreen extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx, false),
             child: const Text(
               'Cancel',
               style: TextStyle(color: AppColors.textSecondary),
@@ -52,25 +57,60 @@ class PdfCombineResultScreen extends ConsumerWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.electricPurple,
             ),
-            onPressed: () async {
-              final name = controller.text.trim();
-              if (name.isEmpty) {
-                return;
-              }
-              Navigator.pop(context); // close dialog
-
-              final savedPath = await ref
-                  .read(pdfCombinerProvider.notifier)
-                  .saveMergedPdf(name);
-              if (context.mounted && savedPath != null) {
-                showSuccessSnackbar(context, message: 'Saved to: $savedPath');
-              }
-            },
-            child: const Text('Save', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Next', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
+
+    final name = nameController.text.trim();
+    if (confirmed != true || name.isEmpty || !context.mounted) {
+      return;
+    }
+
+    // 2 ── Choose save location.
+    final pref = ref.read(storagePreferenceProvider);
+    String directoryPath;
+    SaveLocation location;
+
+    if (pref.alwaysUseCustom && pref.customPath != null) {
+      directoryPath = pref.customPath!;
+      location = SaveLocation.custom;
+    } else {
+      final choice = await showSaveLocationSheet(
+        context,
+        ref,
+        fileName: '$name.pdf',
+      );
+      if (choice == null || !context.mounted) {
+        return;
+      }
+      directoryPath = choice.directoryPath;
+      location = choice.location;
+    }
+
+    // 3 ── Save.
+    final savedPath = await ref
+        .read(pdfCombinerProvider.notifier)
+        .saveMergedPdfTo(
+          desiredName: name,
+          directoryPath: directoryPath,
+          location: location,
+        );
+
+    if (!context.mounted) {
+      return;
+    }
+    if (savedPath != null) {
+      final label = location == SaveLocation.defaultZenvix
+          ? 'Saved to Documents/Zenvix/'
+          : 'Saved to $savedPath';
+      showSuccessSnackbar(context, message: label);
+    } else {
+      final err = ref.read(pdfCombinerProvider).errorMessage;
+      showErrorSnackbar(context, message: err ?? 'Save failed.');
+    }
   }
 
   @override
@@ -145,9 +185,10 @@ class PdfCombineResultScreen extends ConsumerWidget {
                   onPressed: () async {
                     if (state.outputPath != null) {
                       try {
-                        await Share.shareXFiles([
-                          XFile(state.outputPath!),
-                        ], text: 'Merged with Zenvix');
+                        await Share.shareXFiles(
+                          [XFile(state.outputPath!)],
+                          text: 'Merged with Zenvix',
+                        );
                       } on Exception catch (e) {
                         if (context.mounted) {
                           showErrorSnackbar(
@@ -160,8 +201,9 @@ class PdfCombineResultScreen extends ConsumerWidget {
                   },
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
+
                 OutlinedButton.icon(
-                  onPressed: () => _showSaveDialog(context, ref),
+                  onPressed: () => _handleSave(context, ref),
                   icon: const Icon(Icons.save_alt_rounded, size: 18),
                   label: const Text(AppStrings.saveToDisk),
                   style: OutlinedButton.styleFrom(
@@ -169,6 +211,7 @@ class PdfCombineResultScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
+
                 TextButton(
                   onPressed: () {
                     ref.read(pdfCombinerProvider.notifier).reset();

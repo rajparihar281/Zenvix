@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/features/image_to_pdf/models/editable_image.dart';
 import 'package:zenvix/features/image_to_pdf/models/pdf_options.dart';
 import 'package:zenvix/features/image_to_pdf/services/image_processing_service.dart';
@@ -13,10 +14,11 @@ import 'package:zenvix/features/image_to_pdf/services/image_processing_service.d
 class PdfGenerationService {
   final ImageProcessingService _processingService = ImageProcessingService();
 
-  /// Build and save the PDF.
+  /// Build and save the PDF to a temporary app-documents path.
   ///
-  /// [onProgress] reports a value 0.0â€“1.0 as each image is processed.
-  /// Returns the path to the saved PDF file.
+  /// [onProgress] reports a value 0.0–1.0 as each image is processed.
+  /// Returns the path to the saved temporary file. Use [StorageService] to
+  /// move it to its final destination.
   Future<String> generatePdf({
     required List<EditableImage> images,
     required PdfOptions options,
@@ -66,14 +68,14 @@ class PdfGenerationService {
       onProgress?.call((i + 1) / images.length);
     }
 
-    // Save to documents directory.
+    // Save to a temporary location inside app documents.
     final dir = await getApplicationDocumentsDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final outputPath = '${dir.path}/Zenvix_$timestamp.pdf';
-    final file = File(outputPath);
+    final tempPath = '${dir.path}/.zenvix_tmp_$timestamp.pdf';
+    final file = File(tempPath);
     await file.writeAsBytes(await pdf.save());
 
-    return outputPath;
+    return tempPath;
   }
 
   /// Map [PdfOptions] to a [PdfPageFormat].

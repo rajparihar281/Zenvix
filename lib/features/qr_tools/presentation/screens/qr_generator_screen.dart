@@ -44,7 +44,9 @@ class _QrGeneratorScreenState extends ConsumerState<QrGeneratorScreen> {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/zenvix_qr.png');
       await file.writeAsBytes(bytes);
-      await Share.shareXFiles([XFile(file.path)], text: 'Generated with Zenvix');
+      await Share.shareXFiles([
+        XFile(file.path),
+      ], text: 'Generated with Zenvix');
     } on Exception catch (e) {
       if (mounted) {
         showErrorSnackbar(context, message: 'Share failed: $e');
@@ -85,7 +87,8 @@ class _QrGeneratorScreenState extends ConsumerState<QrGeneratorScreen> {
     final notifier = ref.read(qrGeneratorProvider.notifier);
 
     ref.listen<QrGeneratorState>(qrGeneratorProvider, (prev, next) {
-      if (next.errorMessage != null && prev?.errorMessage != next.errorMessage) {
+      if (next.errorMessage != null &&
+          prev?.errorMessage != next.errorMessage) {
         showErrorSnackbar(context, message: next.errorMessage!);
         notifier.clearError();
       }
@@ -109,10 +112,7 @@ class _QrGeneratorScreenState extends ConsumerState<QrGeneratorScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── QR Preview ──
-            _QrPreview(
-              repaintKey: _repaintKey,
-              state: state,
-            ),
+            _QrPreview(repaintKey: _repaintKey, state: state),
             const SizedBox(height: AppTheme.spacingLG),
 
             // ── Input ──
@@ -347,10 +347,7 @@ class _ColorPickerRow extends StatelessWidget {
         width: 90,
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: AppColors.textSecondary,
-          ),
+          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
         ),
       ),
       Expanded(

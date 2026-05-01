@@ -21,9 +21,10 @@ class _ScanOverlayState extends State<ScanOverlay>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _scanLine = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scanLine = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

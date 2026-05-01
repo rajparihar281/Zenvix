@@ -55,17 +55,11 @@ class QrGeneratorNotifier extends StateNotifier<QrGeneratorState> {
   }
 
   void setForegroundColor(Color color) {
-    state = state.copyWith(
-      foregroundColor: color.toARGB32(),
-      clearBytes: true,
-    );
+    state = state.copyWith(foregroundColor: color.toARGB32(), clearBytes: true);
   }
 
   void setBackgroundColor(Color color) {
-    state = state.copyWith(
-      backgroundColor: color.toARGB32(),
-      clearBytes: true,
-    );
+    state = state.copyWith(backgroundColor: color.toARGB32(), clearBytes: true);
   }
 
   /// Validates input and captures the QR widget as PNG bytes.

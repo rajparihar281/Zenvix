@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+
 import 'package:zenvix/features/pdf_page_manager/models/pdf_page_item.dart';
 
 class PdfPageManagerService {
@@ -26,15 +26,16 @@ class PdfPageManagerService {
     return pages;
   }
 
-  Future<String> exportPdf({
+  /// Applies reorder / rotation / delete operations and returns the resulting
+  /// PDF bytes. The caller is responsible for saving them via `[StorageService]`.
+  Future<Uint8List> exportPdfBytes({
     required Uint8List originalPdfData,
     required List<PdfPageItem> finalPages,
-    required String desiredName,
   }) async {
     final originalDoc = PdfDocument(inputBytes: originalPdfData);
     final newDoc = PdfDocument();
 
-    for (var pageItem in finalPages) {
+    for (final pageItem in finalPages) {
       final oldPage = originalDoc.pages[pageItem.originalIndex];
       final newPage = newDoc.pages.add();
 
@@ -43,14 +44,14 @@ class PdfPageManagerService {
       newPage.rotation = _getRotateAngle(totalAngle);
 
       final template = oldPage.createTemplate();
-      newPage.graphics.drawPdfTemplate(template, Offset(0, 0));
+      newPage.graphics.drawPdfTemplate(template, Offset.zero);
     }
 
     final bytes = newDoc.saveSync();
     originalDoc.dispose();
     newDoc.dispose();
 
-    return _saveToDevice(Uint8List.fromList(bytes), desiredName);
+    return Uint8List.fromList(bytes);
   }
 
   int _getAngleValue(PdfPageRotateAngle angle) {
@@ -78,31 +79,5 @@ class PdfPageManagerService {
       default:
         return PdfPageRotateAngle.rotateAngle0;
     }
-  }
-
-  Future<String> _saveToDevice(Uint8List data, String desiredName) async {
-    var finalName = desiredName;
-    if (!finalName.toLowerCase().endsWith('.pdf')) {
-      finalName += '.pdf';
-    }
-
-    Directory? directory;
-    if (Platform.isAndroid) {
-      directory = Directory('/storage/emulated/0/Download');
-      if (!directory.existsSync()) {
-        directory = await getExternalStorageDirectory();
-      }
-    } else {
-      directory = await getApplicationDocumentsDirectory();
-    }
-
-    if (directory == null) {
-      throw Exception('Could not find directory to save the file.');
-    }
-
-    final targetPath = '${directory.path}/$finalName';
-    final file = File(targetPath);
-    await file.writeAsBytes(data);
-    return file.path;
   }
 }

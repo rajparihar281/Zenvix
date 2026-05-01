@@ -1,16 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+
 import 'package:zenvix/core/constants/app_strings.dart';
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 import 'package:zenvix/features/image_to_pdf/providers/image_to_pdf_provider.dart';
 import 'package:zenvix/shared/widgets/error_snackbar.dart';
 import 'package:zenvix/shared/widgets/neon_button.dart';
+import 'package:zenvix/shared/widgets/save_location_sheet.dart';
 
 /// Post-conversion result screen with save/share/convert-another actions.
 class PdfResultScreen extends ConsumerWidget {
   const PdfResultScreen({super.key});
+
+  Future<void> _handleSave(BuildContext context, WidgetRef ref) async {
+    final state = ref.read(imageToPdfProvider);
+    if (state.outputPath == null) {
+      return;
+    }
+
+    // Check if the user has a pinned custom location.
+    final pref = ref.read(storagePreferenceProvider);
+    String directoryPath;
+    SaveLocation location;
+
+    if (pref.alwaysUseCustom && pref.customPath != null) {
+      directoryPath = pref.customPath!;
+      location = SaveLocation.custom;
+    } else {
+      // Show the bottom sheet to let the user pick.
+      if (!context.mounted) {
+        return;
+      }
+      final choice = await showSaveLocationSheet(
+        context,
+        ref,
+        fileName: state.outputPath!.split('/').last,
+      );
+      if (choice == null || !context.mounted) {
+        return; // User cancelled.
+      }
+      directoryPath = choice.directoryPath;
+      location = choice.location;
+    }
+
+    final savedPath = await ref
+        .read(imageToPdfProvider.notifier)
+        .savePdfTo(directoryPath: directoryPath, location: location);
+
+    if (!context.mounted) {
+      return;
+    }
+    if (savedPath != null) {
+      final label = location == SaveLocation.defaultZenvix
+          ? 'Saved to Documents/Zenvix/'
+          : 'Saved to $savedPath';
+      showSuccessSnackbar(context, message: label);
+    } else {
+      final err = ref.read(imageToPdfProvider).errorMessage;
+      showErrorSnackbar(context, message: err ?? 'Save failed.');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,9 +138,10 @@ class PdfResultScreen extends ConsumerWidget {
                   onPressed: () async {
                     if (state.outputPath != null) {
                       try {
-                        await Share.shareXFiles([
-                          XFile(state.outputPath!),
-                        ], text: 'Created with Zenvix');
+                        await Share.shareXFiles(
+                          [XFile(state.outputPath!)],
+                          text: 'Created with Zenvix',
+                        );
                       } on Exception catch (e) {
                         if (context.mounted) {
                           showErrorSnackbar(
@@ -101,14 +155,9 @@ class PdfResultScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
 
-                // Save confirmation
+                // Save to device
                 OutlinedButton.icon(
-                  onPressed: () {
-                    showSuccessSnackbar(
-                      context,
-                      message: 'PDF saved to: ${state.outputPath}',
-                    );
-                  },
+                  onPressed: () => _handleSave(context, ref),
                   icon: const Icon(Icons.save_alt_rounded, size: 18),
                   label: const Text(AppStrings.saveToDisk),
                   style: OutlinedButton.styleFrom(

@@ -54,7 +54,9 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
       context: context,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.radiusXL)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppTheme.radiusXL),
+        ),
       ),
       builder: (ctx) => _ResultSheet(result: result, onScanAgain: _resumeScan),
     );
@@ -71,7 +73,8 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
     final notifier = ref.read(qrScannerProvider.notifier);
 
     ref.listen<QrScannerState>(qrScannerProvider, (prev, next) {
-      if (next.errorMessage != null && prev?.errorMessage != next.errorMessage) {
+      if (next.errorMessage != null &&
+          prev?.errorMessage != next.errorMessage) {
         showErrorSnackbar(context, message: next.errorMessage!);
         notifier.clearError();
       }
@@ -191,7 +194,10 @@ class _ResultSheet extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _typeColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppTheme.radiusRound),
@@ -266,15 +272,15 @@ class _ResultSheet extends StatelessWidget {
                   color: AppColors.neonBlue,
                   onTap: () async {
                     final uri = Uri.tryParse(result.rawValue);
-                    
+
                     if (uri != null && await canLaunchUrl(uri)) {
-                      if(context.mounted){
+                      if (context.mounted) {
                         Navigator.pop(context);
                         await launchUrl(
                           uri,
                           mode: LaunchMode.externalApplication,
                         );
-                      }                      
+                      }
                     }
                   },
                 ),

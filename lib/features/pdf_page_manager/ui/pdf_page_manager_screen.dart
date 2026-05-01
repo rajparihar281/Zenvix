@@ -1,43 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 import 'package:zenvix/features/pdf_page_manager/state/pdf_page_manager_state.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_result_screen.dart';
 import 'package:zenvix/shared/widgets/error_snackbar.dart';
 import 'package:zenvix/shared/widgets/neon_button.dart';
+import 'package:zenvix/shared/widgets/save_location_sheet.dart';
 
 class PdfPageManagerScreen extends ConsumerWidget {
   const PdfPageManagerScreen({super.key});
 
-  Future<void> _showSaveDialog(BuildContext context, WidgetRef ref) async {
+  Future<void> _handleSave(BuildContext context, WidgetRef ref) async {
     final state = ref.read(pdfPageManagerProvider);
     final baseName =
         state.originalPdfName?.replaceAll('.pdf', '') ?? 'Edited_PDF';
-    final controller = TextEditingController(
-      text: '${baseName}_${DateTime.now().millisecondsSinceEpoch}',
+    final nameController = TextEditingController(
+      text: '${baseName}_edited',
     );
 
-    return showDialog(
+    // 1 ── Ask for a file name.
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: const Text(
-          'Save PDF',
+          'File Name',
           style: TextStyle(color: AppColors.textPrimary),
         ),
         content: TextField(
-          controller: controller,
+          controller: nameController,
           style: const TextStyle(color: AppColors.textPrimary),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'File Name',
             suffixText: '.pdf',
-            labelStyle: const TextStyle(color: AppColors.textSecondary),
-            enabledBorder: const UnderlineInputBorder(
+            labelStyle: TextStyle(color: AppColors.textSecondary),
+            enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.surfaceBorder),
             ),
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.electricPurple),
             ),
           ),
@@ -45,7 +49,7 @@ class PdfPageManagerScreen extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx, false),
             child: const Text(
               'Cancel',
               style: TextStyle(color: AppColors.textSecondary),
@@ -55,20 +59,60 @@ class PdfPageManagerScreen extends ConsumerWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.electricPurple,
             ),
-            onPressed: () async {
-              final name = controller.text.trim();
-              if (name.isEmpty) {
-                return;
-              }
-              Navigator.pop(context); // close dialog
-
-              await ref.read(pdfPageManagerProvider.notifier).savePdf(name);
-            },
-            child: const Text('Save', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Next', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
+
+    final name = nameController.text.trim();
+    if (confirmed != true || name.isEmpty || !context.mounted) {
+      return;
+    }
+
+    // 2 ── Choose save location.
+    final pref = ref.read(storagePreferenceProvider);
+    String directoryPath;
+    SaveLocation location;
+
+    if (pref.alwaysUseCustom && pref.customPath != null) {
+      directoryPath = pref.customPath!;
+      location = SaveLocation.custom;
+    } else {
+      final choice = await showSaveLocationSheet(
+        context,
+        ref,
+        fileName: '$name.pdf',
+      );
+      if (choice == null || !context.mounted) {
+        return;
+      }
+      directoryPath = choice.directoryPath;
+      location = choice.location;
+    }
+
+    // 3 ── Save.
+    final savedPath = await ref
+        .read(pdfPageManagerProvider.notifier)
+        .savePdfTo(
+          desiredName: name,
+          directoryPath: directoryPath,
+          location: location,
+        );
+
+    if (!context.mounted) {
+      return;
+    }
+    if (savedPath != null) {
+      final label = location == SaveLocation.defaultZenvix
+          ? 'Saved to Documents/Zenvix/'
+          : 'Saved to $savedPath';
+      showSuccessSnackbar(context, message: label);
+    } else {
+      final err = ref.read(pdfPageManagerProvider).errorMessage;
+      showErrorSnackbar(context, message: err ?? 'Save failed.');
+    }
   }
 
   @override
@@ -394,7 +438,7 @@ class PdfPageManagerScreen extends ConsumerWidget {
                     isLoading: state.status == PageManagerStatus.processing,
                     onPressed: state.pages.isEmpty
                         ? null
-                        : () => _showSaveDialog(context, ref),
+                        : () => _handleSave(context, ref),
                   ),
                 ),
               ],

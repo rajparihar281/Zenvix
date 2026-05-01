@@ -1,5 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zenvix/core/services/storage_provider.dart';
+import 'package:zenvix/core/services/storage_service.dart';
 import 'package:zenvix/features/pdf_combiner/models/pdf_file_item.dart';
 import 'package:zenvix/features/pdf_combiner/services/pdf_combine_service.dart';
 
@@ -24,16 +27,19 @@ class PdfCombinerState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) => PdfCombinerState(
-    files: files ?? this.files,
-    status: status ?? this.status,
-    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-  );
+  }) =>
+      PdfCombinerState(
+        files: files ?? this.files,
+        status: status ?? this.status,
+        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      );
 }
 
 class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
-  PdfCombinerNotifier() : super(const PdfCombinerState());
+  PdfCombinerNotifier(this._ref) : super(const PdfCombinerState());
+
+  final Ref _ref;
   final PdfCombineService _service = PdfCombineService();
 
   /// Pick PDF files from the file manager.
@@ -103,12 +109,28 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
     }
   }
 
-  Future<String?> saveMergedPdf(String desiredName) async {
+  /// Save the merged PDF to [directoryPath] with a user-supplied [desiredName].
+  ///
+  /// Returns the final saved path, or null on failure.
+  Future<String?> saveMergedPdfTo({
+    required String desiredName,
+    required String directoryPath,
+    required SaveLocation location,
+  }) async {
     if (state.outputPath == null) {
       return null;
     }
     try {
-      return await _service.saveToDevice(state.outputPath!, desiredName);
+      final storage = _ref.read(storageServiceProvider);
+      final fileName = StorageService.ensureExtension(desiredName, '.pdf');
+      final result = await storage.copyFile(
+        sourcePath: state.outputPath!,
+        fileName: fileName,
+        directoryPath: directoryPath,
+        location: location,
+      );
+      state = state.copyWith(outputPath: result.savedPath);
+      return result.savedPath;
     } on Exception catch (e) {
       state = state.copyWith(errorMessage: 'Save failed: $e');
       return null;
@@ -121,5 +143,5 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
 
 final pdfCombinerProvider =
     StateNotifierProvider<PdfCombinerNotifier, PdfCombinerState>(
-      (ref) => PdfCombinerNotifier(),
-    );
+  PdfCombinerNotifier.new,
+);
