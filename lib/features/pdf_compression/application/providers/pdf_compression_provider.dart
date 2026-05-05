@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:zenvix/features/pdf_compression/data/services/pdf_compression_service.dart';
 import 'package:zenvix/features/pdf_compression/domain/models/compression_options.dart';
 
@@ -113,10 +114,29 @@ class PdfCompressionNotifier extends StateNotifier<PdfCompressionState> {
       );
 
       final fileData = await File(file.path!).readAsBytes();
+      
+      // Edge Case: Validate corrupt PDF
+      try {
+        final doc = PdfDocument(inputBytes: fileData);
+        doc.dispose();
+      } on Exception {
+        state = state.copyWith(
+          status: CompressionStatus.error,
+          errorMessage: 'Invalid or corrupted PDF file.',
+        );
+        return;
+      }
+
       final estimated = _service.estimateCompressedSize(
         originalSize: fileData.length,
         level: state.level,
       );
+
+      // Edge Case: Already small file
+      String? warningMessage;
+      if (fileData.length < 100 * 1024) {
+        warningMessage = 'File is already very small (${(fileData.length / 1024).toStringAsFixed(1)} KB). Compression may not reduce size further.';
+      }
 
       state = state.copyWith(
         status: CompressionStatus.idle,
@@ -124,6 +144,7 @@ class PdfCompressionNotifier extends StateNotifier<PdfCompressionState> {
         originalSize: fileData.length,
         estimatedSize: estimated,
         pdfData: fileData,
+        errorMessage: warningMessage,
       );
     } on Exception catch (e) {
       state = state.copyWith(

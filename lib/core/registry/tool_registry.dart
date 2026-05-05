@@ -52,14 +52,13 @@ final List<ToolDefinition> registeredTools = [
     isAvailable: false,
   ),
   const ToolDefinition(
-    id: 'image_compressor',
-    title: 'Image Compressor',
-    description: 'Reduce image file size without losing quality',
+    id: 'pdf_compression',
+    title: 'PDF Compressor',
+    description: 'Reduce PDF file size without losing quality',
     icon: Icons.compress_outlined,
     accentColor: AppColors.success,
     secondaryColor: AppColors.accentCyan,
-    routePath: '/image-compressor',
-    isAvailable: false,
+    routePath: '/pdf-compression',
   ),
   const ToolDefinition(
     id: 'qr_generator',

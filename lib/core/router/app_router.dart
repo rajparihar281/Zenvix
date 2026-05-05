@@ -3,6 +3,7 @@ import 'package:zenvix/features/home/screens/home_screen.dart';
 import 'package:zenvix/features/image_to_pdf/screens/image_to_pdf_screen.dart';
 import 'package:zenvix/features/my_files/screens/my_files_screen.dart';
 import 'package:zenvix/features/pdf_combiner/screens/pdf_combiner_screen.dart';
+import 'package:zenvix/features/pdf_compression/presentation/screens/pdf_compression_screen.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart';
 
 /// Generates routes from named paths.
@@ -22,6 +23,8 @@ class AppRouter {
         return _buildRoute(const ImageToPdfScreen(), settings);
       case '/pdf-combiner':
         return _buildRoute(const PdfCombinerScreen(), settings);
+      case '/pdf-compression':
+        return _buildRoute(const PdfCompressionScreen(), settings);
       case '/pdf-page-manager':
         return _buildRoute(const PdfPageManagerScreen(), settings);
       case '/my-files':
