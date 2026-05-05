@@ -117,8 +117,7 @@ class PdfCompressionNotifier extends StateNotifier<PdfCompressionState> {
       
       // Edge Case: Validate corrupt PDF
       try {
-        final doc = PdfDocument(inputBytes: fileData);
-        doc.dispose();
+        PdfDocument(inputBytes: fileData).dispose();
       } on Exception {
         state = state.copyWith(
           status: CompressionStatus.error,
