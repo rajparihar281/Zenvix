@@ -29,12 +29,12 @@ class PdfCompressionService {
     }
     sourceDoc.dispose();
 
-    // Rasterize every page to PNG, then re-encode to JPEG in an isolate.
-    final jpegPages = <Uint8List>[];
+    final dpi = _dpiForLevel(level);
     var processed = 0;
 
-    // DPI scales with quality: lower quality → lower DPI for more savings.
-    final dpi = _dpiForLevel(level);
+    final newDoc = PdfDocument();
+    // Syncfusion adds a default blank page; remove it.
+    newDoc.pages.removeAt(0);
 
     await for (final rasterPage in Printing.raster(
       pdfData,
@@ -48,13 +48,23 @@ class PdfCompressionService {
         _EncodeParams(pngBytes, level.jpegQuality),
       );
 
-      jpegPages.add(jpegBytes);
+      final size = processed < pageSizes.length ? pageSizes[processed] : pageSizes.last;
+      newDoc.pageSettings.size = size;
+      newDoc.pageSettings.margins.all = 0;
+      final page = newDoc.pages.add();
+      final bitmap = PdfBitmap(jpegBytes);
+      page.graphics.drawImage(
+        bitmap,
+        Rect.fromLTWH(0, 0, size.width, size.height),
+      );
+
       processed++;
       onProgress?.call(processed / pageCount);
     }
 
-    // Build a new PDF from the JPEG pages.
-    return _assembleCompressedPdf(jpegPages, pageSizes);
+    final result = Uint8List.fromList(newDoc.saveSync());
+    newDoc.dispose();
+    return result;
   }
 
   /// Estimates the compressed size without performing the full operation.
@@ -109,32 +119,6 @@ class PdfCompressionService {
         return 100;
     }
   }
-
-  Uint8List _assembleCompressedPdf(
-    List<Uint8List> jpegPages,
-    List<Size> pageSizes,
-  ) {
-    final newDoc = PdfDocument();
-    // Syncfusion adds a default blank page; remove it.
-    newDoc.pages.removeAt(0);
-
-    for (var i = 0; i < jpegPages.length; i++) {
-      final size = i < pageSizes.length ? pageSizes[i] : pageSizes.last;
-      newDoc.pageSettings.size = size;
-      newDoc.pageSettings.margins.all = 0;
-      final page = newDoc.pages.add();
-      final bitmap = PdfBitmap(jpegPages[i]);
-      page.graphics.drawImage(
-        bitmap,
-        Rect.fromLTWH(0, 0, size.width, size.height),
-      );
-    }
-
-    final result = Uint8List.fromList(newDoc.saveSync());
-    newDoc.dispose();
-    return result;
-  }
-}
 
 // ── Top-level isolate functions ──────────────────────────────────────────
 

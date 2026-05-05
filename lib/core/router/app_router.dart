@@ -20,6 +20,8 @@ class AppRouter {
         return _buildRoute(const ImageToPdfScreen(), settings);
       case '/pdf-combiner':
         return _buildRoute(const PdfCombinerScreen(), settings);
+      case '/pdf-compression':
+        return _buildRoute(const PdfCompressionScreen(), settings);
       case '/pdf-page-manager':
         return _buildRoute(const PdfPageManagerScreen(), settings);
       case '/my-files':
