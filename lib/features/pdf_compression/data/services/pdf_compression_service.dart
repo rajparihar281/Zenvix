@@ -119,6 +119,7 @@ class PdfCompressionService {
         return 100;
     }
   }
+}
 
 // ── Top-level isolate functions ──────────────────────────────────────────
 

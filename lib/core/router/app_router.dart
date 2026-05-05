@@ -26,8 +26,6 @@ class AppRouter {
         return _buildRoute(const PdfPageManagerScreen(), settings);
       case '/my-files':
         return _buildRoute(const MyFilesScreen(), settings);
-      case '/pdf-compression':
-        return _buildRoute(const PdfCompressionScreen(), settings);
       case '/pdf-security':
         return _buildRoute(const PdfSecurityScreen(), settings);
       case '/qr-tools':
