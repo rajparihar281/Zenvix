@@ -4,6 +4,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:zenvix/core/constants/app_strings.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
+import 'package:zenvix/features/batch_processor/application/providers/batch_provider.dart';
+import 'package:zenvix/features/batch_processor/presentation/widgets/batch_action_bar.dart';
 import 'package:zenvix/features/my_files/models/my_file_item.dart';
 import 'package:zenvix/features/my_files/providers/my_files_provider.dart';
 import 'package:zenvix/features/my_files/screens/pdf_viewer_screen.dart';
@@ -20,7 +22,6 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
   @override
   void initState() {
     super.initState();
-    // Refresh files when the screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(myFilesProvider.notifier).loadFiles();
     });
@@ -123,9 +124,7 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
 
   Future<void> _shareFile(MyFileItem file) async {
     try {
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'Generated with Zenvix');
+      await Share.shareXFiles([XFile(file.path)], text: 'Generated with Zenvix');
     } on Exception catch (e) {
       if (mounted) {
         showErrorSnackbar(context, message: 'Failed to share: $e');
@@ -137,8 +136,7 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute<PdfViewerScreen>(
-        builder: (_) =>
-            PdfViewerScreen(filePath: file.path, fileName: file.name),
+        builder: (_) => PdfViewerScreen(filePath: file.path, fileName: file.name),
       ),
     );
   }
@@ -146,8 +144,11 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(myFilesProvider);
+    // Watch batch state so appBar/tiles rebuild on selection changes.
+    ref.watch(batchProvider);
+    final batchNotifier = ref.read(batchProvider.notifier);
+    final hasSelection = batchNotifier.selectedPaths.isNotEmpty;
 
-    // Listen for errors
     ref.listen<MyFilesState>(myFilesProvider, (prev, next) {
       if (next.errorMessage != null &&
           next.errorMessage != prev?.errorMessage) {
@@ -159,49 +160,37 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(AppStrings.myFiles),
+        title: hasSelection
+            ? Text(
+                '${batchNotifier.selectedPaths.length} selected',
+                style: const TextStyle(color: AppColors.electricPurple),
+              )
+            : const Text(AppStrings.myFiles),
         actions: [
-          PopupMenuButton<FileSortOption>(
-            icon: const Icon(Icons.sort_rounded),
-            tooltip: 'Sort by',
-            onSelected: (option) =>
-                ref.read(myFilesProvider.notifier).setSortOption(option),
-            itemBuilder: (context) => [
-              _buildSortItem(
-                FileSortOption.newest,
-                'Newest First',
-                state.sortOption,
-              ),
-              _buildSortItem(
-                FileSortOption.oldest,
-                'Oldest First',
-                state.sortOption,
-              ),
-              _buildSortItem(
-                FileSortOption.nameAsc,
-                'Name (A-Z)',
-                state.sortOption,
-              ),
-              _buildSortItem(
-                FileSortOption.nameDesc,
-                'Name (Z-A)',
-                state.sortOption,
-              ),
-              _buildSortItem(
-                FileSortOption.sizeDesc,
-                'Largest First',
-                state.sortOption,
-              ),
-              _buildSortItem(
-                FileSortOption.sizeAsc,
-                'Smallest First',
-                state.sortOption,
-              ),
-            ],
-          ),
+          if (hasSelection)
+            IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () => ref.read(batchProvider.notifier).clearSelection(),
+            )
+          else
+            PopupMenuButton<FileSortOption>(
+              icon: const Icon(Icons.sort_rounded),
+              tooltip: 'Sort by',
+              onSelected: (option) =>
+                  ref.read(myFilesProvider.notifier).setSortOption(option),
+              itemBuilder: (context) => [
+                _buildSortItem(FileSortOption.newest, 'Newest First', state.sortOption),
+                _buildSortItem(FileSortOption.oldest, 'Oldest First', state.sortOption),
+                _buildSortItem(FileSortOption.nameAsc, 'Name (A-Z)', state.sortOption),
+                _buildSortItem(FileSortOption.nameDesc, 'Name (Z-A)', state.sortOption),
+                _buildSortItem(FileSortOption.sizeDesc, 'Largest First', state.sortOption),
+                _buildSortItem(FileSortOption.sizeAsc, 'Smallest First', state.sortOption),
+              ],
+            ),
         ],
       ),
       body: _buildBody(state),
+      bottomNavigationBar: const BatchActionBar(),
     );
   }
 
@@ -286,23 +275,36 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
         itemCount: state.files.length,
         itemBuilder: (context, index) {
           final file = state.files[index];
-          // Time formatting
           final diff = DateTime.now().difference(file.modified);
           final timeStr = diff.inDays > 0
               ? '${diff.inDays}d ago'
               : (diff.inHours > 0 ? '${diff.inHours}h ago' : 'Just now');
+          final isSelected =
+              ref.read(batchProvider.notifier).isSelected(file.path);
 
           return Card(
             margin: const EdgeInsets.only(bottom: AppTheme.spacingSM),
-            color: AppColors.cardSurface,
+            color: isSelected
+                ? AppColors.electricPurple.withValues(alpha: 0.08)
+                : AppColors.cardSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
               side: BorderSide(
-                color: AppColors.surfaceBorder.withValues(alpha: 0.4),
+                color: isSelected
+                    ? AppColors.electricPurple.withValues(alpha: 0.5)
+                    : AppColors.surfaceBorder.withValues(alpha: 0.4),
               ),
             ),
             child: InkWell(
-              onTap: () => _openFile(file),
+              onTap: () {
+                if (ref.read(batchProvider.notifier).selectedPaths.isNotEmpty) {
+                  ref.read(batchProvider.notifier).toggleSelection(file.path);
+                } else {
+                  _openFile(file);
+                }
+              },
+              onLongPress: () =>
+                  ref.read(batchProvider.notifier).toggleSelection(file.path),
               borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
               child: Padding(
                 padding: const EdgeInsets.all(AppTheme.spacingSM),
@@ -312,11 +314,15 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppColors.electricPurple.withValues(alpha: 0.12),
+                        color: isSelected
+                            ? AppColors.electricPurple.withValues(alpha: 0.25)
+                            : AppColors.electricPurple.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
-                        Icons.picture_as_pdf_rounded,
+                      child: Icon(
+                        isSelected
+                            ? Icons.check_rounded
+                            : Icons.picture_as_pdf_rounded,
                         color: AppColors.electricPurple,
                         size: 24,
                       ),
@@ -337,7 +343,7 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${file.formattedSize}  Â·  $timeStr',
+                            '${file.formattedSize}  ·  $timeStr',
                             style: const TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -346,42 +352,37 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
                         ],
                       ),
                     ),
-                    PopupMenuButton<String>(
-                      icon: const Icon(
-                        Icons.more_vert_rounded,
-                        color: AppColors.textSecondary,
-                      ),
-                      onSelected: (value) {
-                        if (value == 'open') {
-                          _openFile(file);
-                        } else if (value == 'rename') {
-                          _showRenameDialog(file);
-                        } else if (value == 'share') {
-                          _shareFile(file);
-                        } else if (value == 'delete') {
-                          _showDeleteConfirmation(file);
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'open', child: Text('Open')),
-                        const PopupMenuItem(
-                          value: 'share',
-                          child: Text('Share'),
+                    if (!isSelected)
+                      PopupMenuButton<String>(
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          color: AppColors.textSecondary,
                         ),
-                        const PopupMenuItem(
-                          value: 'rename',
-                          child: Text('Rename'),
-                        ),
-                        const PopupMenuDivider(),
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(color: AppColors.error),
+                        onSelected: (value) {
+                          if (value == 'open') {
+                            _openFile(file);
+                          } else if (value == 'rename') {
+                            _showRenameDialog(file);
+                          } else if (value == 'share') {
+                            _shareFile(file);
+                          } else if (value == 'delete') {
+                            _showDeleteConfirmation(file);
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(value: 'open', child: Text('Open')),
+                          const PopupMenuItem(value: 'share', child: Text('Share')),
+                          const PopupMenuItem(value: 'rename', child: Text('Rename')),
+                          const PopupMenuDivider(),
+                          const PopupMenuItem(
+                            value: 'delete',
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(color: AppColors.error),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                   ],
                 ),
               ),
