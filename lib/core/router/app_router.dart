@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zenvix/features/batch_processor/presentation/screens/batch_progress_screen.dart';
 import 'package:zenvix/features/home/screens/home_screen.dart';
 import 'package:zenvix/features/image_to_pdf/screens/image_to_pdf_screen.dart';
 import 'package:zenvix/features/my_files/screens/my_files_screen.dart';
@@ -30,6 +31,8 @@ class AppRouter {
         return _buildRoute(const PdfSecurityScreen(), settings);
       case '/qr-tools':
         return _buildRoute(const QrToolsScreen(), settings);
+      case '/batch-progress':
+        return _buildRoute(const BatchProgressScreen(), settings);
       default:
         return _buildRoute(const HomeScreen(), settings);
     }
