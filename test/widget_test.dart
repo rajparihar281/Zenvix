@@ -6,5 +6,5 @@ void main() {
     await tester.pumpWidget(const ZenvixApp());
 
     expect(find.byType(ZenvixApp), findsOneWidget);
-  });
+  }); 
 }
