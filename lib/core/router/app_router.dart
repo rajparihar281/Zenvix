@@ -7,6 +7,7 @@ import 'package:zenvix/features/pdf_combiner/screens/pdf_combiner_screen.dart';
 import 'package:zenvix/features/pdf_compression/presentation/screens/pdf_compression_screen.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart';
 import 'package:zenvix/features/pdf_security/presentation/screens/pdf_security_screen.dart';
+import 'package:zenvix/features/pdf_watermark/presentation/screens/pdf_watermark_screen.dart';
 import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.dart';
 
 // ignore_for_file: avoid_classes_with_only_static_members
@@ -33,6 +34,8 @@ class AppRouter {
         return _buildRoute(const QrToolsScreen(), settings);
       case '/batch-progress':
         return _buildRoute(const BatchProgressScreen(), settings);
+      case '/pdf-watermark':
+        return _buildRoute(const PdfWatermarkScreen(), settings);
       default:
         return _buildRoute(const HomeScreen(), settings);
     }
