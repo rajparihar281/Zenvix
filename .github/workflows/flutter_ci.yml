@@ -28,12 +28,16 @@ jobs:
         with:
           flutter-version: 3.41.9
           channel: stable
+          cache: true
 
       - name: Show Flutter Version
         run: flutter --version
 
       - name: Install Dependencies
         run: flutter pub get
+
+      - name: Analyze Project
+        run: flutter analyze
 
       - name: Run Tests
         run: flutter test
