@@ -110,7 +110,7 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () async {
-              await ref.read(myFilesProvider.notifier).deleteFile(file.path);
+              await ref.read(myFilesProvider.notifier).deleteFile(file.path, ref);
               if (context.mounted) {
                 Navigator.pop(context);
               }

@@ -45,6 +45,12 @@ class AppDrawer extends StatelessWidget {
         route: '/my-files',
         isCurrent: currentRoute == '/my-files',
       ),
+      _DrawerItem(
+        icon: Icons.delete_outline,
+        label: 'Trash',
+        route: '/trash',
+        isCurrent: currentRoute == '/trash',
+      ),
       const _DrawerItem(
         icon: Icons.favorite_outline,
         label: AppStrings.drawerFavorites,

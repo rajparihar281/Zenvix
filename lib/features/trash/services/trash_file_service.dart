@@ -6,15 +6,15 @@ class TrashFileService {
   Future<Directory> get _trashDirectory async {
     final appDir = await getApplicationDocumentsDirectory();
     final trashDir = Directory(p.join(appDir.path, '.trash'));
-    if (!await trashDir.exists()) {
-      await trashDir.create(recursive: true);
+    if (!trashDir.existsSync()) {
+      trashDir.createSync(recursive: true);
     }
     return trashDir;
   }
 
   Future<String> moveToTrash(String originalPath) async {
     final originalFile = File(originalPath);
-    if (!await originalFile.exists()) {
+    if (!originalFile.existsSync()) {
       throw Exception('File not found: $originalPath');
     }
 
@@ -24,46 +24,49 @@ class TrashFileService {
     final newFileName = '$uniqueId$fileExtension';
     final trashedPath = p.join(trashDir.path, newFileName);
 
-    await originalFile.copy(trashedPath);
-    await originalFile.delete();
+    originalFile
+      ..copySync(trashedPath)
+      ..deleteSync();
 
     return trashedPath;
   }
 
   Future<void> restoreFile(String trashedPath, String originalPath) async {
     final trashedFile = File(trashedPath);
-    if (!await trashedFile.exists()) {
+    if (!trashedFile.existsSync()) {
       throw Exception('Trashed file not found: $trashedPath');
     }
 
     final originalDir = Directory(p.dirname(originalPath));
-    if (!await originalDir.exists()) {
-      await originalDir.create(recursive: true);
+    if (!originalDir.existsSync()) {
+      originalDir.createSync(recursive: true);
     }
 
-    await trashedFile.copy(originalPath);
-    await trashedFile.delete();
+    trashedFile
+      ..copySync(originalPath)
+      ..deleteSync();
   }
 
   Future<void> deleteFile(String path) async {
     final file = File(path);
-    if (await file.exists()) {
-      await file.delete();
+    if (file.existsSync()) {
+      file.deleteSync();
     }
   }
 
   Future<void> clearTrashDirectory() async {
     final trashDir = await _trashDirectory;
-    if (await trashDir.exists()) {
-      await trashDir.delete(recursive: true);
-      await trashDir.create(recursive: true);
+    if (trashDir.existsSync()) {
+      trashDir
+        ..deleteSync(recursive: true)
+        ..createSync(recursive: true);
     }
   }
 
   Future<int> getFileSize(String path) async {
     final file = File(path);
-    if (await file.exists()) {
-      return await file.length();
+    if (file.existsSync()) {
+      return file.lengthSync();
     }
     return 0;
   }
