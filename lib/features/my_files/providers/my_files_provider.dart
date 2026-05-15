@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zenvix/features/my_files/models/my_file_item.dart';
 import 'package:zenvix/features/my_files/services/my_files_service.dart';
+import 'package:zenvix/features/trash/application/providers/trash_provider.dart';
 
 enum FileSortOption { newest, oldest, nameAsc, nameDesc, sizeDesc, sizeAsc }
 
@@ -91,9 +92,12 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
     return sorted;
   }
 
-  Future<void> deleteFile(String path) async {
+  Future<void> deleteFile(String path, WidgetRef ref) async {
     try {
-      await _service.deleteFile(path);
+      // Instead of permanent delete, move to trash
+      final trashNotifier = ref.read(trashProvider.notifier);
+      await trashNotifier.moveToTrash(path);
+      
       // Remove from state
       final updated = state.files.where((f) => f.path != path).toList();
       state = state.copyWith(files: updated);

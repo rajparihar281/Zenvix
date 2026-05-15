@@ -6,15 +6,13 @@ import 'package:zenvix/features/trash/domain/repositories/trash_repository.dart'
 import 'package:zenvix/features/trash/services/trash_file_service.dart';
 
 class TrashRepositoryImpl implements TrashRepository {
+
+  TrashRepositoryImpl(this._localDataSource, this._fileService);
   final TrashLocalDataSource _localDataSource;
   final TrashFileService _fileService;
 
-  TrashRepositoryImpl(this._localDataSource, this._fileService);
-
   @override
-  Future<List<TrashItem>> getTrashItems() async {
-    return await _localDataSource.getTrashItems();
-  }
+  Future<List<TrashItem>> getTrashItems() => _localDataSource.getTrashItems();
 
   @override
   Future<void> moveToTrash(String originalPath) async {

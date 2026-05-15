@@ -8,16 +8,16 @@ abstract class TrashLocalDataSource {
 }
 
 class TrashLocalDataSourceImpl implements TrashLocalDataSource {
-  final SharedPreferences _prefs;
-  static const String _trashItemsKey = 'trash_items';
 
   TrashLocalDataSourceImpl(this._prefs);
+  final SharedPreferences _prefs;
+  static const String _trashItemsKey = 'trash_items';
 
   @override
   Future<List<TrashItemModel>> getTrashItems() async {
     final jsonString = _prefs.getString(_trashItemsKey);
     if (jsonString != null) {
-      final List<dynamic> jsonList = json.decode(jsonString);
+      final jsonList = json.decode(jsonString) as List<dynamic>;
       return jsonList.map((e) => TrashItemModel.fromMap(e as Map<String, dynamic>)).toList();
     }
     return [];
@@ -25,7 +25,7 @@ class TrashLocalDataSourceImpl implements TrashLocalDataSource {
 
   @override
   Future<void> saveTrashItems(List<TrashItemModel> items) async {
-    final List<Map<String, dynamic>> mapList = items.map((e) => e.toMap()).toList();
+    final mapList = items.map((e) => e.toMap()).toList();
     final jsonString = json.encode(mapList);
     await _prefs.setString(_trashItemsKey, jsonString);
   }
