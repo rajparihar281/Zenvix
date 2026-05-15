@@ -51,6 +51,7 @@ dependencies:
 
   #logo
   flutter_launcher_icons: ^0.14.4
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
