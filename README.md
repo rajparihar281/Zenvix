@@ -2,7 +2,7 @@
 
 <h1>Zenvix</h1>
 
-<p>A focused, offline-first toolkit for efficient PDF and image processing.</p>
+<p>A focused, offline-first toolkit for efficient handy tools for pdf work and images.</p>
 
 <p>
   <a href="https://flutter.dev">
@@ -66,12 +66,21 @@ Zenvix follows a modular, feature-based architecture:
 ```id="k3k2pq"
 lib/
 ├── core/
+│   ├──constants/  
+│   ├──models/
+│   ├──registry/
+│   ├──router/
+│   ├──services/
+│   ├──theme/
+│  
 ├── features/
-│   ├── image_to_pdf/
-│   ├── pdf_combiner/
-│   ├── pdf_page_manager/
+│   ├──/....
+│   ├──/....
+│   ├──/....
+│
 ├── home/
 ├── shared/
+    ├── widgets/
 ```
 
 ### Principles
@@ -102,7 +111,7 @@ All operations are optimized for local execution and memory efficiency.
 ### Prerequisites
 
 * Flutter SDK (3.19+)
-* Android Studio or Xcode
+* Android Studio or Xcode or VSCode
 
 ### Setup
 
@@ -146,16 +155,6 @@ Commit conventions:
 * `fix:` bug fix
 * `refactor:` improvements
 * `chore:` maintenance
-
----
-
-## Roadmap
-
-* PDF compression
-* Password protection
-* OCR support
-* QR scanning
-* Watermarking
 
 ---
 
