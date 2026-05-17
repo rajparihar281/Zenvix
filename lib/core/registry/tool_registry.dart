@@ -77,7 +77,6 @@ final List<ToolDefinition> registeredTools = [
     routePath: '/ocr',
   ),
 
-  // ── Coming Soon ───────────────────────────────────────────────────────
   const ToolDefinition(
     id: 'pdf_to_image',
     title: 'PDF → Image',
