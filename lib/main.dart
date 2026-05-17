@@ -9,7 +9,6 @@ import 'package:zenvix/core/theme/app_theme.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Force OLED-friendly system chrome (dark status/nav bars).
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
