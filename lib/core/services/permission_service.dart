@@ -1,7 +1,5 @@
 import 'package:permission_handler/permission_handler.dart';
 
-// ignore_for_file: avoid_classes_with_only_static_members
-
 /// Centralized permission handling with user-friendly messages.
 class PermissionService {
   PermissionService._();

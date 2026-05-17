@@ -11,8 +11,6 @@ import 'package:zenvix/features/pdf_watermark/presentation/screens/pdf_watermark
 import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.dart';
 import 'package:zenvix/features/trash/presentation/screens/trash_screen.dart';
 
-// ignore_for_file: avoid_classes_with_only_static_members
-
 class AppRouter {
   AppRouter._();
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
