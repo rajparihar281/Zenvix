@@ -56,9 +56,7 @@ class _ProgressHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingMD),
       decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.surfaceBorder),
-        ),
+        border: Border(bottom: BorderSide(color: AppColors.surfaceBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
