@@ -15,10 +15,7 @@ enum SaveLocation {
 
 /// Result of a save operation.
 class StorageSaveResult {
-  const StorageSaveResult({
-    required this.savedPath,
-    required this.location,
-  });
+  const StorageSaveResult({required this.savedPath, required this.location});
 
   /// Absolute path to the saved file.
   final String savedPath;

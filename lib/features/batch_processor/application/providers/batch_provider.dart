@@ -82,10 +82,7 @@ class BatchNotifier extends StateNotifier<BatchState> {
       state = state.copyWith(jobs: updatedJobs);
     }
 
-    state = state.copyWith(
-      isRunning: false,
-      currentIndex: state.jobs.length,
-    );
+    state = state.copyWith(isRunning: false, currentIndex: state.jobs.length);
   }
 
   Future<void> _runMerge() async {
@@ -107,21 +104,13 @@ class BatchNotifier extends StateNotifier<BatchState> {
         status: BatchJobStatus.done,
         outputPath: outputPath,
       );
-      state = state.copyWith(
-        jobs: [done],
-        isRunning: false,
-        currentIndex: 1,
-      );
+      state = state.copyWith(jobs: [done], isRunning: false, currentIndex: 1);
     } on Exception catch (e) {
       final failed = mergeJob.copyWith(
         status: BatchJobStatus.failed,
         error: e.toString(),
       );
-      state = state.copyWith(
-        jobs: [failed],
-        isRunning: false,
-        currentIndex: 1,
-      );
+      state = state.copyWith(jobs: [failed], isRunning: false, currentIndex: 1);
     }
   }
 

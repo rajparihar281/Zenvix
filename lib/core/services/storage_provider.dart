@@ -33,22 +33,19 @@ class StoragePreferenceState {
     bool? alwaysUseCustom,
     bool? isLoaded,
     bool clearCustomPath = false,
-  }) =>
-      StoragePreferenceState(
-        customPath:
-            clearCustomPath ? null : (customPath ?? this.customPath),
-        alwaysUseCustom: alwaysUseCustom ?? this.alwaysUseCustom,
-        isLoaded: isLoaded ?? this.isLoaded,
-      );
+  }) => StoragePreferenceState(
+    customPath: clearCustomPath ? null : (customPath ?? this.customPath),
+    alwaysUseCustom: alwaysUseCustom ?? this.alwaysUseCustom,
+    isLoaded: isLoaded ?? this.isLoaded,
+  );
 }
 
 // ── Notifier ──────────────────────────────────────────────────────────────────
 
 /// Manages and persists the user's preferred save-location choice.
-class StoragePreferenceNotifier
-    extends StateNotifier<StoragePreferenceState> {
+class StoragePreferenceNotifier extends StateNotifier<StoragePreferenceState> {
   StoragePreferenceNotifier(this._storage)
-      : super(const StoragePreferenceState()) {
+    : super(const StoragePreferenceState()) {
     _hydrate();
   }
 
@@ -67,10 +64,7 @@ class StoragePreferenceNotifier
   /// Set a new custom path and persist it.
   Future<void> setCustomPath(String path) async {
     await _storage.persistCustomPath(path);
-    state = state.copyWith(
-      customPath: path,
-      alwaysUseCustom: true,
-    );
+    state = state.copyWith(customPath: path, alwaysUseCustom: true);
   }
 
   /// Toggle the "always use custom location" flag.
@@ -79,10 +73,7 @@ class StoragePreferenceNotifier
   Future<void> setAlwaysUseCustom({required bool value}) async {
     if (!value) {
       await _storage.clearCustomPath();
-      state = state.copyWith(
-        alwaysUseCustom: false,
-        clearCustomPath: true,
-      );
+      state = state.copyWith(alwaysUseCustom: false, clearCustomPath: true);
     } else {
       state = state.copyWith(alwaysUseCustom: true);
     }
@@ -91,16 +82,13 @@ class StoragePreferenceNotifier
   /// Clear everything and revert to the default Zenvix folder.
   Future<void> resetToDefault() async {
     await _storage.clearCustomPath();
-    state = state.copyWith(
-      alwaysUseCustom: false,
-      clearCustomPath: true,
-    );
+    state = state.copyWith(alwaysUseCustom: false, clearCustomPath: true);
   }
 }
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
-final storagePreferenceProvider = StateNotifierProvider<
-    StoragePreferenceNotifier, StoragePreferenceState>(
-  (ref) => StoragePreferenceNotifier(ref.watch(storageServiceProvider)),
-);
+final storagePreferenceProvider =
+    StateNotifierProvider<StoragePreferenceNotifier, StoragePreferenceState>(
+      (ref) => StoragePreferenceNotifier(ref.watch(storageServiceProvider)),
+    );
