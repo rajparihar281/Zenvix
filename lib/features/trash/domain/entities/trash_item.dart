@@ -1,5 +1,4 @@
 class TrashItem {
-
   const TrashItem({
     required this.id,
     required this.originalPath,
@@ -23,31 +22,32 @@ class TrashItem {
     int? sizeBytes,
     DateTime? deletedAt,
   }) => TrashItem(
-      id: id ?? this.id,
-      originalPath: originalPath ?? this.originalPath,
-      trashedPath: trashedPath ?? this.trashedPath,
-      fileName: fileName ?? this.fileName,
-      sizeBytes: sizeBytes ?? this.sizeBytes,
-      deletedAt: deletedAt ?? this.deletedAt,
-    );
+    id: id ?? this.id,
+    originalPath: originalPath ?? this.originalPath,
+    trashedPath: trashedPath ?? this.trashedPath,
+    fileName: fileName ?? this.fileName,
+    sizeBytes: sizeBytes ?? this.sizeBytes,
+    deletedAt: deletedAt ?? this.deletedAt,
+  );
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-  
+
     return other is TrashItem &&
-      other.id == id &&
-      other.originalPath == originalPath &&
-      other.trashedPath == trashedPath &&
-      other.fileName == fileName &&
-      other.sizeBytes == sizeBytes &&
-      other.deletedAt == deletedAt;
+        other.id == id &&
+        other.originalPath == originalPath &&
+        other.trashedPath == trashedPath &&
+        other.fileName == fileName &&
+        other.sizeBytes == sizeBytes &&
+        other.deletedAt == deletedAt;
   }
 
   @override
-  int get hashCode => id.hashCode ^
+  int get hashCode =>
+      id.hashCode ^
       originalPath.hashCode ^
       trashedPath.hashCode ^
       fileName.hashCode ^
