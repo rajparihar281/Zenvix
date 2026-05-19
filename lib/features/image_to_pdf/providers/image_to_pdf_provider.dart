@@ -40,15 +40,14 @@ class ImageToPdfState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) =>
-      ImageToPdfState(
-        images: images ?? this.images,
-        pdfOptions: pdfOptions ?? this.pdfOptions,
-        status: status ?? this.status,
-        progress: progress ?? this.progress,
-        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      );
+  }) => ImageToPdfState(
+    images: images ?? this.images,
+    pdfOptions: pdfOptions ?? this.pdfOptions,
+    status: status ?? this.status,
+    progress: progress ?? this.progress,
+    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 // ── Notifier ─────────────────────────────────────────────────────────────
@@ -230,5 +229,5 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
 
 final imageToPdfProvider =
     StateNotifierProvider<ImageToPdfNotifier, ImageToPdfState>(
-  ImageToPdfNotifier.new,
-);
+      ImageToPdfNotifier.new,
+    );

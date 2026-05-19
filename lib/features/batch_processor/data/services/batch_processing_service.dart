@@ -71,11 +71,7 @@ class BatchProcessingService {
     return result.savedPath;
   }
 
-  Future<String> _protect(
-    BatchJob job,
-    String dirPath,
-    String password,
-  ) async {
+  Future<String> _protect(BatchJob job, String dirPath, String password) async {
     if (password.isEmpty) {
       throw Exception('Password required for protect operation.');
     }

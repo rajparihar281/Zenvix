@@ -61,7 +61,8 @@ class BatchActionBar extends ConsumerWidget {
                 ),
                 const Spacer(),
                 TextButton(
-                  onPressed: () => ref.read(batchProvider.notifier).clearSelection(),
+                  onPressed: () =>
+                      ref.read(batchProvider.notifier).clearSelection(),
                   child: const Text(
                     'Clear',
                     style: TextStyle(color: AppColors.textSecondary),
@@ -78,22 +79,14 @@ class BatchActionBar extends ConsumerWidget {
                     icon: Icons.compress_rounded,
                     label: 'Compress',
                     color: AppColors.neonBlue,
-                    onTap: () => _launch(
-                      context,
-                      ref,
-                      BatchOperation.compress,
-                    ),
+                    onTap: () => _launch(context, ref, BatchOperation.compress),
                   ),
                   const SizedBox(width: AppTheme.spacingSM),
                   _ActionChip(
                     icon: Icons.merge_rounded,
                     label: 'Merge',
                     color: AppColors.accentCyan,
-                    onTap: () => _launch(
-                      context,
-                      ref,
-                      BatchOperation.merge,
-                    ),
+                    onTap: () => _launch(context, ref, BatchOperation.merge),
                   ),
                   const SizedBox(width: AppTheme.spacingSM),
                   _ActionChip(
@@ -111,11 +104,7 @@ class BatchActionBar extends ConsumerWidget {
     );
   }
 
-  void _launch(
-    BuildContext context,
-    WidgetRef ref,
-    BatchOperation operation,
-  ) {
+  void _launch(BuildContext context, WidgetRef ref, BatchOperation operation) {
     ref.read(batchProvider.notifier).startBatch(operation);
     Navigator.push(
       context,

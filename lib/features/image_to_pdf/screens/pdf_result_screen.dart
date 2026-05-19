@@ -138,10 +138,9 @@ class PdfResultScreen extends ConsumerWidget {
                   onPressed: () async {
                     if (state.outputPath != null) {
                       try {
-                        await Share.shareXFiles(
-                          [XFile(state.outputPath!)],
-                          text: 'Created with Zenvix',
-                        );
+                        await Share.shareXFiles([
+                          XFile(state.outputPath!),
+                        ], text: 'Created with Zenvix');
                       } on Exception catch (e) {
                         if (context.mounted) {
                           showErrorSnackbar(
