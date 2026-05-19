@@ -25,14 +25,15 @@ class SaveLocationChoice {
 Future<SaveLocationChoice?> showSaveLocationSheet(
   BuildContext context,
   WidgetRef ref, {
+
   /// Pre-selected file name shown as context (optional).
   String? fileName,
 }) => showModalBottomSheet<SaveLocationChoice>(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (_) => _SaveLocationSheet(fileName: fileName, ref: ref),
-  );
+  context: context,
+  backgroundColor: Colors.transparent,
+  isScrollControlled: true,
+  builder: (_) => _SaveLocationSheet(fileName: fileName, ref: ref),
+);
 
 // ── Internal sheet ────────────────────────────────────────────────────────────
 
@@ -122,8 +123,7 @@ class _SaveLocationSheetState extends ConsumerState<_SaveLocationSheet> {
         AppTheme.spacingLG,
         AppTheme.spacingMD,
         AppTheme.spacingLG,
-        AppTheme.spacingLG +
-            MediaQuery.of(context).viewInsets.bottom,
+        AppTheme.spacingLG + MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -145,18 +145,18 @@ class _SaveLocationSheetState extends ConsumerState<_SaveLocationSheet> {
           Text(
             'Save Location',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
           ),
 
           if (widget.fileName != null) ...[
             const SizedBox(height: 4),
             Text(
               widget.fileName!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textTertiary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textTertiary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -220,74 +220,74 @@ class _LocationOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        child: InkWell(
-          onTap: isLoading ? null : onTap,
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppTheme.spacingMD,
-              vertical: AppTheme.spacingMD,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-                  ),
-                  child: Icon(icon, color: iconColor, size: 22),
-                ),
-                const SizedBox(width: AppTheme.spacingMD),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          color: AppColors.textTertiary,
-                          fontSize: 12,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: AppTheme.spacingSM),
-                if (isLoading)
-                  const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.electricPurple,
-                    ),
-                  )
-                else
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textTertiary,
-                    size: 20,
-                  ),
-              ],
-            ),
-          ),
+    color: AppColors.surfaceLight,
+    borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+    child: InkWell(
+      onTap: isLoading ? null : onTap,
+      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTheme.spacingMD,
+          vertical: AppTheme.spacingMD,
         ),
-      );
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
+            ),
+            const SizedBox(width: AppTheme.spacingMD),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: AppColors.textTertiary,
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppTheme.spacingSM),
+            if (isLoading)
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.electricPurple,
+                ),
+              )
+            else
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textTertiary,
+                size: 20,
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class _AlwaysCustomToggle extends ConsumerWidget {

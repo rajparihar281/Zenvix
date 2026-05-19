@@ -39,8 +39,9 @@ class TrashItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = '${item.deletedAt.year}-${item.deletedAt.month.toString().padLeft(2, '0')}-${item.deletedAt.day.toString().padLeft(2, '0')}';
-    
+    final dateFormat =
+        '${item.deletedAt.year}-${item.deletedAt.month.toString().padLeft(2, '0')}-${item.deletedAt.day.toString().padLeft(2, '0')}';
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       color: isSelected ? AppColors.surfaceLight : AppColors.surface,
@@ -56,7 +57,7 @@ class TrashItemCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
-          child: Padding(
+        child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,12 +65,10 @@ class TrashItemCard extends StatelessWidget {
               // Icon / Selection
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
-                child: isSelectionMode
-                    ? _buildCheckbox()
-                    : _buildFileIcon(),
+                child: isSelectionMode ? _buildCheckbox() : _buildFileIcon(),
               ),
               const SizedBox(width: 16),
-              
+
               // Content
               Expanded(
                 child: Column(
@@ -128,7 +127,7 @@ class TrashItemCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Actions (only visible when not in selection mode)
               if (!isSelectionMode)
                 Row(
@@ -140,7 +139,10 @@ class TrashItemCard extends StatelessWidget {
                       onPressed: onRestore,
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete_forever, color: AppColors.error),
+                      icon: const Icon(
+                        Icons.delete_forever,
+                        color: AppColors.error,
+                      ),
                       tooltip: 'Delete Permanently',
                       onPressed: onDelete,
                     ),
@@ -154,26 +156,29 @@ class TrashItemCard extends StatelessWidget {
   }
 
   Widget _buildFileIcon() => Container(
-      key: const ValueKey('icon'),
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Icon(
-        Icons.insert_drive_file_outlined,
-        color: AppColors.textSecondary,
-      ),
-    );
+    key: const ValueKey('icon'),
+    width: 40,
+    height: 40,
+    decoration: BoxDecoration(
+      color: AppColors.surfaceLight,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: const Icon(
+      Icons.insert_drive_file_outlined,
+      color: AppColors.textSecondary,
+    ),
+  );
 
   Widget _buildCheckbox() => Container(
-      key: const ValueKey('checkbox'),
-      width: 40,
-      height: 40,
-      alignment: Alignment.center,
-      child: isSelected
-          ? const Icon(Icons.check_circle, color: AppColors.neonBlue)
-          : const Icon(Icons.radio_button_unchecked, color: AppColors.textSecondary),
-    );
+    key: const ValueKey('checkbox'),
+    width: 40,
+    height: 40,
+    alignment: Alignment.center,
+    child: isSelected
+        ? const Icon(Icons.check_circle, color: AppColors.neonBlue)
+        : const Icon(
+            Icons.radio_button_unchecked,
+            color: AppColors.textSecondary,
+          ),
+  );
 }

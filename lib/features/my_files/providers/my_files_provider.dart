@@ -97,7 +97,7 @@ class MyFilesNotifier extends StateNotifier<MyFilesState> {
       // Instead of permanent delete, move to trash
       final trashNotifier = ref.read(trashProvider.notifier);
       await trashNotifier.moveToTrash(path);
-      
+
       // Remove from state
       final updated = state.files.where((f) => f.path != path).toList();
       state = state.copyWith(files: updated);
