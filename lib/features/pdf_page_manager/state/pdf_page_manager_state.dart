@@ -44,17 +44,16 @@ class PdfPageManagerState {
     Set<String>? selectedPageIds,
     bool clearOutput = false,
     bool clearError = false,
-  }) =>
-      PdfPageManagerState(
-        originalPdfPath: originalPdfPath ?? this.originalPdfPath,
-        originalPdfName: originalPdfName ?? this.originalPdfName,
-        originalPdfData: originalPdfData ?? this.originalPdfData,
-        pages: pages ?? this.pages,
-        status: status ?? this.status,
-        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-        selectedPageIds: selectedPageIds ?? this.selectedPageIds,
-      );
+  }) => PdfPageManagerState(
+    originalPdfPath: originalPdfPath ?? this.originalPdfPath,
+    originalPdfName: originalPdfName ?? this.originalPdfName,
+    originalPdfData: originalPdfData ?? this.originalPdfData,
+    pages: pages ?? this.pages,
+    status: status ?? this.status,
+    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    selectedPageIds: selectedPageIds ?? this.selectedPageIds,
+  );
 }
 
 class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
@@ -230,5 +229,5 @@ class PdfPageManagerNotifier extends StateNotifier<PdfPageManagerState> {
 
 final pdfPageManagerProvider =
     StateNotifierProvider<PdfPageManagerNotifier, PdfPageManagerState>(
-  PdfPageManagerNotifier.new,
-);
+      PdfPageManagerNotifier.new,
+    );

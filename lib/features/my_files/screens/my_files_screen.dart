@@ -110,7 +110,9 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () async {
-              await ref.read(myFilesProvider.notifier).deleteFile(file.path, ref);
+              await ref
+                  .read(myFilesProvider.notifier)
+                  .deleteFile(file.path, ref);
               if (context.mounted) {
                 Navigator.pop(context);
               }
@@ -124,7 +126,9 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
 
   Future<void> _shareFile(MyFileItem file) async {
     try {
-      await Share.shareXFiles([XFile(file.path)], text: 'Generated with Zenvix');
+      await Share.shareXFiles([
+        XFile(file.path),
+      ], text: 'Generated with Zenvix');
     } on Exception catch (e) {
       if (mounted) {
         showErrorSnackbar(context, message: 'Failed to share: $e');
@@ -136,7 +140,8 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute<PdfViewerScreen>(
-        builder: (_) => PdfViewerScreen(filePath: file.path, fileName: file.name),
+        builder: (_) =>
+            PdfViewerScreen(filePath: file.path, fileName: file.name),
       ),
     );
   }
@@ -170,7 +175,8 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
           if (hasSelection)
             IconButton(
               icon: const Icon(Icons.close_rounded),
-              onPressed: () => ref.read(batchProvider.notifier).clearSelection(),
+              onPressed: () =>
+                  ref.read(batchProvider.notifier).clearSelection(),
             )
           else
             PopupMenuButton<FileSortOption>(
@@ -179,12 +185,36 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
               onSelected: (option) =>
                   ref.read(myFilesProvider.notifier).setSortOption(option),
               itemBuilder: (context) => [
-                _buildSortItem(FileSortOption.newest, 'Newest First', state.sortOption),
-                _buildSortItem(FileSortOption.oldest, 'Oldest First', state.sortOption),
-                _buildSortItem(FileSortOption.nameAsc, 'Name (A-Z)', state.sortOption),
-                _buildSortItem(FileSortOption.nameDesc, 'Name (Z-A)', state.sortOption),
-                _buildSortItem(FileSortOption.sizeDesc, 'Largest First', state.sortOption),
-                _buildSortItem(FileSortOption.sizeAsc, 'Smallest First', state.sortOption),
+                _buildSortItem(
+                  FileSortOption.newest,
+                  'Newest First',
+                  state.sortOption,
+                ),
+                _buildSortItem(
+                  FileSortOption.oldest,
+                  'Oldest First',
+                  state.sortOption,
+                ),
+                _buildSortItem(
+                  FileSortOption.nameAsc,
+                  'Name (A-Z)',
+                  state.sortOption,
+                ),
+                _buildSortItem(
+                  FileSortOption.nameDesc,
+                  'Name (Z-A)',
+                  state.sortOption,
+                ),
+                _buildSortItem(
+                  FileSortOption.sizeDesc,
+                  'Largest First',
+                  state.sortOption,
+                ),
+                _buildSortItem(
+                  FileSortOption.sizeAsc,
+                  'Smallest First',
+                  state.sortOption,
+                ),
               ],
             ),
         ],
@@ -279,8 +309,9 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
           final timeStr = diff.inDays > 0
               ? '${diff.inDays}d ago'
               : (diff.inHours > 0 ? '${diff.inHours}h ago' : 'Just now');
-          final isSelected =
-              ref.read(batchProvider.notifier).isSelected(file.path);
+          final isSelected = ref
+              .read(batchProvider.notifier)
+              .isSelected(file.path);
 
           return Card(
             margin: const EdgeInsets.only(bottom: AppTheme.spacingSM),
@@ -370,9 +401,18 @@ class _MyFilesScreenState extends ConsumerState<MyFilesScreen> {
                           }
                         },
                         itemBuilder: (context) => [
-                          const PopupMenuItem(value: 'open', child: Text('Open')),
-                          const PopupMenuItem(value: 'share', child: Text('Share')),
-                          const PopupMenuItem(value: 'rename', child: Text('Rename')),
+                          const PopupMenuItem(
+                            value: 'open',
+                            child: Text('Open'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'share',
+                            child: Text('Share'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'rename',
+                            child: Text('Rename'),
+                          ),
                           const PopupMenuDivider(),
                           const PopupMenuItem(
                             value: 'delete',

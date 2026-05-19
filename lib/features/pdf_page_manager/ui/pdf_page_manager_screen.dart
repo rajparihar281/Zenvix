@@ -18,9 +18,7 @@ class PdfPageManagerScreen extends ConsumerWidget {
     final state = ref.read(pdfPageManagerProvider);
     final baseName =
         state.originalPdfName?.replaceAll('.pdf', '') ?? 'Edited_PDF';
-    final nameController = TextEditingController(
-      text: '${baseName}_edited',
-    );
+    final nameController = TextEditingController(text: '${baseName}_edited');
 
     // 1 ── Ask for a file name.
     final confirmed = await showDialog<bool>(
