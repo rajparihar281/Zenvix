@@ -8,7 +8,6 @@ abstract class TrashLocalDataSource {
 }
 
 class TrashLocalDataSourceImpl implements TrashLocalDataSource {
-
   TrashLocalDataSourceImpl(this._prefs);
   final SharedPreferences _prefs;
   static const String _trashItemsKey = 'trash_items';
@@ -18,7 +17,9 @@ class TrashLocalDataSourceImpl implements TrashLocalDataSource {
     final jsonString = _prefs.getString(_trashItemsKey);
     if (jsonString != null) {
       final jsonList = json.decode(jsonString) as List<dynamic>;
-      return jsonList.map((e) => TrashItemModel.fromMap(e as Map<String, dynamic>)).toList();
+      return jsonList
+          .map((e) => TrashItemModel.fromMap(e as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
