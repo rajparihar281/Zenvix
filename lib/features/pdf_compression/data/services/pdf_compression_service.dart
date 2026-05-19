@@ -48,7 +48,9 @@ class PdfCompressionService {
         _EncodeParams(pngBytes, level.jpegQuality),
       );
 
-      final size = processed < pageSizes.length ? pageSizes[processed] : pageSizes.last;
+      final size = processed < pageSizes.length
+          ? pageSizes[processed]
+          : pageSizes.last;
       newDoc.pageSettings.size = size;
       newDoc.pageSettings.margins.all = 0;
       final page = newDoc.pages.add();

@@ -114,7 +114,7 @@ class PdfCompressionNotifier extends StateNotifier<PdfCompressionState> {
       );
 
       final fileData = await File(file.path!).readAsBytes();
-      
+
       // Edge Case: Validate corrupt PDF
       try {
         PdfDocument(inputBytes: fileData).dispose();
@@ -134,7 +134,8 @@ class PdfCompressionNotifier extends StateNotifier<PdfCompressionState> {
       // Edge Case: Already small file
       String? warningMessage;
       if (fileData.length < 100 * 1024) {
-        warningMessage = 'File is already very small (${(fileData.length / 1024).toStringAsFixed(1)} KB). Compression may not reduce size further.';
+        warningMessage =
+            'File is already very small (${(fileData.length / 1024).toStringAsFixed(1)} KB). Compression may not reduce size further.';
       }
 
       state = state.copyWith(

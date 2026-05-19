@@ -27,13 +27,12 @@ class PdfCombinerState {
     String? errorMessage,
     bool clearOutput = false,
     bool clearError = false,
-  }) =>
-      PdfCombinerState(
-        files: files ?? this.files,
-        status: status ?? this.status,
-        outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
-        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      );
+  }) => PdfCombinerState(
+    files: files ?? this.files,
+    status: status ?? this.status,
+    outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
@@ -143,5 +142,5 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
 
 final pdfCombinerProvider =
     StateNotifierProvider<PdfCombinerNotifier, PdfCombinerState>(
-  PdfCombinerNotifier.new,
-);
+      PdfCombinerNotifier.new,
+    );
