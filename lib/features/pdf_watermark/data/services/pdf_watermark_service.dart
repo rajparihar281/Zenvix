@@ -9,7 +9,7 @@ import 'package:zenvix/features/pdf_watermark/domain/models/watermark_options.da
 
 class PdfWatermarkService {
   PdfWatermarkService({StorageService? storage})
-      : _storage = storage ?? StorageService();
+    : _storage = storage ?? StorageService();
 
   final StorageService _storage;
 
@@ -93,10 +93,7 @@ class PdfWatermarkService {
       ..setTransparency(options.opacity)
       ..translateTransform(pos.dx + imgW / 2, pos.dy + imgH / 2)
       ..rotateTransform(options.rotation)
-      ..drawImage(
-        pdfImage,
-        Rect.fromLTWH(-imgW / 2, -imgH / 2, imgW, imgH),
-      )
+      ..drawImage(pdfImage, Rect.fromLTWH(-imgW / 2, -imgH / 2, imgW, imgH))
       ..restore();
   }
 
@@ -115,8 +112,7 @@ class PdfWatermarkService {
       WatermarkPosition.topLeft => const Offset(margin, margin),
       WatermarkPosition.topRight => Offset(pw - w - margin, margin),
       WatermarkPosition.bottomLeft => Offset(margin, ph - h - margin),
-      WatermarkPosition.bottomRight =>
-        Offset(pw - w - margin, ph - h - margin),
+      WatermarkPosition.bottomRight => Offset(pw - w - margin, ph - h - margin),
     };
   }
 

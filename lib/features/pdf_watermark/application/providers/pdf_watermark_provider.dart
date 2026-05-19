@@ -45,8 +45,9 @@ class PdfWatermarkState {
     options: options ?? this.options,
     originalFileName: originalFileName ?? this.originalFileName,
     pdfData: pdfData ?? this.pdfData,
-    watermarkedData:
-        clearWatermarked ? null : (watermarkedData ?? this.watermarkedData),
+    watermarkedData: clearWatermarked
+        ? null
+        : (watermarkedData ?? this.watermarkedData),
     outputPath: clearOutput ? null : (outputPath ?? this.outputPath),
     errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
   );

@@ -42,14 +42,13 @@ class TrashState {
     String? searchQuery,
     String? errorMessage,
     bool clearError = false,
-  }) =>
-      TrashState(
-        items: items ?? this.items,
-        selectedItems: selectedItems ?? this.selectedItems,
-        isLoading: isLoading ?? this.isLoading,
-        searchQuery: searchQuery ?? this.searchQuery,
-        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      );
+  }) => TrashState(
+    items: items ?? this.items,
+    selectedItems: selectedItems ?? this.selectedItems,
+    isLoading: isLoading ?? this.isLoading,
+    searchQuery: searchQuery ?? this.searchQuery,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 }
 
 // --- Notifier ---
@@ -67,7 +66,7 @@ class TrashNotifier extends StateNotifier<TrashState> {
       final localDataSource = TrashLocalDataSourceImpl(prefs);
       final fileService = TrashFileService();
       _repository = TrashRepositoryImpl(localDataSource, fileService);
-      
+
       await loadItems();
     } on Exception catch (e) {
       state = state.copyWith(
@@ -123,13 +122,15 @@ class TrashNotifier extends StateNotifier<TrashState> {
       return;
     }
     state = state.copyWith(isLoading: true, clearError: true);
-    
+
     try {
-      final itemsToRestore = state.items.where((item) => state.selectedItems.contains(item.id)).toList();
+      final itemsToRestore = state.items
+          .where((item) => state.selectedItems.contains(item.id))
+          .toList();
       for (final item in itemsToRestore) {
         await _repository!.restoreItem(item);
       }
-      
+
       clearSelection();
       await loadItems();
     } on Exception catch (e) {
@@ -145,13 +146,15 @@ class TrashNotifier extends StateNotifier<TrashState> {
       return;
     }
     state = state.copyWith(isLoading: true, clearError: true);
-    
+
     try {
-      final itemsToDelete = state.items.where((item) => state.selectedItems.contains(item.id)).toList();
+      final itemsToDelete = state.items
+          .where((item) => state.selectedItems.contains(item.id))
+          .toList();
       for (final item in itemsToDelete) {
         await _repository!.permanentlyDeleteItem(item);
       }
-      
+
       clearSelection();
       await loadItems();
     } on Exception catch (e) {
@@ -219,14 +222,12 @@ class TrashNotifier extends StateNotifier<TrashState> {
     if (_repository == null) {
       return;
     }
-    
+
     try {
       await _repository!.moveToTrash(originalPath);
       await loadItems();
     } on Exception catch (e) {
-      state = state.copyWith(
-        errorMessage: 'Failed to move to trash: $e',
-      );
+      state = state.copyWith(errorMessage: 'Failed to move to trash: $e');
     }
   }
 

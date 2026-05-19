@@ -6,7 +6,6 @@ import 'package:zenvix/features/trash/domain/repositories/trash_repository.dart'
 import 'package:zenvix/features/trash/services/trash_file_service.dart';
 
 class TrashRepositoryImpl implements TrashRepository {
-
   TrashRepositoryImpl(this._localDataSource, this._fileService);
   final TrashLocalDataSource _localDataSource;
   final TrashFileService _fileService;

@@ -175,10 +175,9 @@ class _FileInfoCard extends StatelessWidget {
         Expanded(
           child: Text(
             state.originalFileName ?? 'Unknown',
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(color: AppColors.textPrimary),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(color: AppColors.textPrimary),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -210,9 +209,8 @@ class _WatermarkTypeToggle extends StatelessWidget {
             right: type == WatermarkType.text ? AppTheme.spacingSM : 0,
           ),
           child: GestureDetector(
-            onTap: () => notifier.updateOptions(
-              state.options.copyWith(type: type),
-            ),
+            onTap: () =>
+                notifier.updateOptions(state.options.copyWith(type: type)),
             child: AnimatedContainer(
               duration: AppTheme.animFast,
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -283,9 +281,7 @@ class _WatermarkPreview extends StatelessWidget {
           Container(color: Colors.white.withValues(alpha: 0.05)),
           // Watermark overlay
           Positioned.fill(
-            child: CustomPaint(
-              painter: _WatermarkPainter(options: options),
-            ),
+            child: CustomPaint(painter: _WatermarkPainter(options: options)),
           ),
           // Label
           Positioned(
@@ -333,12 +329,13 @@ class _WatermarkPainter extends CustomPainter {
 
     final offset = _resolveOffset(size, textPainter.width, textPainter.height);
 
-    canvas..save()
-    ..translate(
-      offset.dx + textPainter.width / 2,
-      offset.dy + textPainter.height / 2,
-    )
-    ..rotate(options.rotation * 3.14159 / 180);
+    canvas
+      ..save()
+      ..translate(
+        offset.dx + textPainter.width / 2,
+        offset.dy + textPainter.height / 2,
+      )
+      ..rotate(options.rotation * 3.14159 / 180);
     textPainter.paint(
       canvas,
       Offset(-textPainter.width / 2, -textPainter.height / 2),
@@ -349,12 +346,17 @@ class _WatermarkPainter extends CustomPainter {
   Offset _resolveOffset(Size size, double w, double h) {
     const margin = 12.0;
     return switch (options.position) {
-      WatermarkPosition.center => Offset((size.width - w) / 2, (size.height - h) / 2),
+      WatermarkPosition.center => Offset(
+        (size.width - w) / 2,
+        (size.height - h) / 2,
+      ),
       WatermarkPosition.topLeft => const Offset(margin, margin),
       WatermarkPosition.topRight => Offset(size.width - w - margin, margin),
       WatermarkPosition.bottomLeft => Offset(margin, size.height - h - margin),
-      WatermarkPosition.bottomRight =>
-        Offset(size.width - w - margin, size.height - h - margin),
+      WatermarkPosition.bottomRight => Offset(
+        size.width - w - margin,
+        size.height - h - margin,
+      ),
     };
   }
 
@@ -459,10 +461,7 @@ class _ImageControls extends StatelessWidget {
         const SizedBox(height: AppTheme.spacingSM),
         Text(
           state.options.imagePath!.split('/').last.split(r'\').last,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.textSecondary,
-          ),
+          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -474,9 +473,8 @@ class _ImageControls extends StatelessWidget {
         min: 0.05,
         max: 1,
         displayValue: '${(state.options.imageScale * 100).round()}%',
-        onChanged: (v) => notifier.updateOptions(
-          state.options.copyWith(imageScale: v),
-        ),
+        onChanged: (v) =>
+            notifier.updateOptions(state.options.copyWith(imageScale: v)),
       ),
     ],
   );
@@ -500,9 +498,8 @@ class _CommonControls extends StatelessWidget {
         min: 0.05,
         max: 1,
         displayValue: '${(state.options.opacity * 100).round()}%',
-        onChanged: (v) => notifier.updateOptions(
-          state.options.copyWith(opacity: v),
-        ),
+        onChanged: (v) =>
+            notifier.updateOptions(state.options.copyWith(opacity: v)),
       ),
       const SizedBox(height: AppTheme.spacingSM),
       _SliderRow(
@@ -511,21 +508,16 @@ class _CommonControls extends StatelessWidget {
         min: -180,
         max: 180,
         displayValue: '${state.options.rotation.round()}°',
-        onChanged: (v) => notifier.updateOptions(
-          state.options.copyWith(rotation: v),
-        ),
+        onChanged: (v) =>
+            notifier.updateOptions(state.options.copyWith(rotation: v)),
       ),
       const SizedBox(height: AppTheme.spacingMD),
-      Text(
-        'Position',
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
+      Text('Position', style: Theme.of(context).textTheme.bodySmall),
       const SizedBox(height: AppTheme.spacingSM),
       _PositionGrid(
         selected: state.options.position,
-        onChanged: (p) => notifier.updateOptions(
-          state.options.copyWith(position: p),
-        ),
+        onChanged: (p) =>
+            notifier.updateOptions(state.options.copyWith(position: p)),
       ),
     ],
   );
@@ -652,7 +644,7 @@ class _ColorRow extends StatelessWidget {
       Wrap(
         spacing: AppTheme.spacingSM,
         children: _palette.map((color) {
-          final isSelected = selected.toARGB32()  == color.toARGB32();
+          final isSelected = selected.toARGB32() == color.toARGB32();
           return GestureDetector(
             onTap: () => onChanged(color),
             child: AnimatedContainer(
