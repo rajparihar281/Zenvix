@@ -24,5 +24,7 @@ class PermissionService {
 
   /// Returns a user-friendly message for a denied permission.
   static String deniedMessage(String permissionName) =>
-      '$permissionName permission denied. Please grant access in your device Settings.';
+      '$permissionName permission denied. Please grant'
+      ' access in your device'
+      ' Settings.';
 }
