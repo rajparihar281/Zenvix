@@ -35,7 +35,7 @@ Future<SaveLocationChoice?> showSaveLocationSheet(
   builder: (_) => _SaveLocationSheet(fileName: fileName, ref: ref),
 );
 
-// ── Internal sheet ────────────────────────────────────────────────────────────
+// ── Internal sheet────────────────────────────────────────────────────────────
 
 class _SaveLocationSheet extends ConsumerStatefulWidget {
   const _SaveLocationSheet({this.fileName, required this.ref});
