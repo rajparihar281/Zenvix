@@ -5,10 +5,6 @@ import 'package:zenvix/core/models/tool_definition.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 
-/// Premium feature card rendered from a [ToolDefinition].
-///
-/// Shows icon, title, description, and a "Coming Soon" badge
-/// for tools that are not yet available.  Animates border glow on press.
 class ToolCard extends StatefulWidget {
   const ToolCard({super.key, required this.tool, this.onTap});
   final ToolDefinition tool;
@@ -66,13 +62,11 @@ class _ToolCardState extends State<ToolCard>
         ),
         child: Stack(
           children: [
-            // ── Card Content ────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.all(AppTheme.spacingMD),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Icon with gradient circle
                   Container(
                     width: 48,
                     height: 48,
@@ -93,8 +87,6 @@ class _ToolCardState extends State<ToolCard>
                     child: Icon(tool.icon, color: tool.accentColor, size: 24),
                   ),
                   const SizedBox(height: AppTheme.spacingSM + 4),
-
-                  // Title
                   Text(
                     tool.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -107,8 +99,6 @@ class _ToolCardState extends State<ToolCard>
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: AppTheme.spacingXS),
-
-                  // Description
                   Text(
                     tool.description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -123,8 +113,6 @@ class _ToolCardState extends State<ToolCard>
                 ],
               ),
             ),
-
-            // ── Coming Soon Badge ───────────────────────────────────────
             if (!tool.isAvailable)
               Positioned(
                 top: AppTheme.spacingSM,
