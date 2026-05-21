@@ -42,7 +42,6 @@ class AppRouter {
     }
   }
 
-  /// Wraps a page in a [MaterialPageRoute] with a smooth slide transition.
   static PageRouteBuilder<dynamic> _buildRoute(
     Widget page,
     RouteSettings settings,
