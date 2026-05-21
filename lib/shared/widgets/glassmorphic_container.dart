@@ -1,12 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 
-/// A frosted-glass container with blur, tinted background,
-/// and subtle border — the signature glassmorphism look.
 class GlassmorphicContainer extends StatelessWidget {
   const GlassmorphicContainer({
     super.key,

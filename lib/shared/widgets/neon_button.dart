@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 
-///
-/// Use for primary CTAs throughout the app.
 class NeonButton extends StatefulWidget {
   const NeonButton({
     super.key,

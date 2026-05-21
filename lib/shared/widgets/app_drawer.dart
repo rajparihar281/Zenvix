@@ -20,7 +20,6 @@ class _DrawerItem {
   final bool isCurrent;
 }
 
-/// Premium OLED drawer with gradient header, menu items, and footer.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key, this.currentRoute = '/'});
   final String currentRoute;
@@ -54,7 +53,6 @@ class AppDrawer extends StatelessWidget {
       const _DrawerItem(
         icon: Icons.favorite_outline,
         label: AppStrings.drawerFavorites,
-        enabled: false,
       ),
       const _DrawerItem(
         icon: Icons.settings_outlined,
