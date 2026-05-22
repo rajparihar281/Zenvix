@@ -19,7 +19,7 @@ void main() {
   );
 
   runApp(const ProviderScope(child: ZenvixApp()));
-}
+} 
 
 class ZenvixApp extends StatelessWidget {
   const ZenvixApp({super.key});
@@ -29,7 +29,7 @@ class ZenvixApp extends StatelessWidget {
     title: AppStrings.appName,
     debugShowCheckedModeBanner: false,
     theme: AppTheme.darkTheme,
-    initialRoute: '/',
+    initialRoute: '/splashscreen',
     onGenerateRoute: AppRouter.onGenerateRoute,
   );
 }
