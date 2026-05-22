@@ -10,6 +10,7 @@ import 'package:zenvix/features/pdf_security/presentation/screens/pdf_security_s
 import 'package:zenvix/features/pdf_watermark/presentation/screens/pdf_watermark_screen.dart';
 import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.dart';
 import 'package:zenvix/features/trash/presentation/screens/trash_screen.dart';
+import 'package:zenvix/shared/splash_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -17,6 +18,8 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return _buildRoute(const HomeScreen(), settings);
+      case '/splashscreen':
+        return _buildRoute(const SplashScreen(), settings);
       case '/image-to-pdf':
         return _buildRoute(const ImageToPdfScreen(), settings);
       case '/pdf-combiner':
