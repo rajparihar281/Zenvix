@@ -19,7 +19,7 @@ void main() {
   );
 
   runApp(const ProviderScope(child: ZenvixApp()));
-} 
+}
 
 class ZenvixApp extends StatelessWidget {
   const ZenvixApp({super.key});
