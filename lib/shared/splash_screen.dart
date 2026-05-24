@@ -55,15 +55,13 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    _nameSlide = Tween<Offset>(
-      begin: const Offset(0, 0.4),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.35, 0.65, curve: Curves.easeOutCubic),
-      ),
-    );
+    _nameSlide = Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.35, 0.65, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _taglineOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -97,10 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
             animation: _controller,
             builder: (context, child) => Opacity(
               opacity: _iconOpacity.value,
-              child: Transform.scale(
-                scale: _iconScale.value,
-                child: child,
-              ),
+              child: Transform.scale(scale: _iconScale.value, child: child),
             ),
             child: Container(
               width: 88,
@@ -136,10 +131,7 @@ class _SplashScreenState extends State<SplashScreen>
             animation: _controller,
             builder: (context, child) => FadeTransition(
               opacity: _nameOpacity,
-              child: SlideTransition(
-                position: _nameSlide,
-                child: child,
-              ),
+              child: SlideTransition(position: _nameSlide, child: child),
             ),
             child: ShaderMask(
               shaderCallback: (bounds) => AppColors.accentGradient.createShader(
@@ -162,10 +154,8 @@ class _SplashScreenState extends State<SplashScreen>
           // ── Animated tagline ──
           AnimatedBuilder(
             animation: _controller,
-            builder: (context, child) => Opacity(
-              opacity: _taglineOpacity.value,
-              child: child,
-            ),
+            builder: (context, child) =>
+                Opacity(opacity: _taglineOpacity.value, child: child),
             child: const Text(
               'Your pocket toolkit, forged for power.',
               style: TextStyle(
