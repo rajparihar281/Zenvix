@@ -24,23 +24,10 @@ class StorageSaveResult {
   final SaveLocation location;
 }
 
-/// Centralised storage service for Zenvix output files.
-///
-/// Responsibilities:
-/// - Resolve `/Documents/Zenvix/` (with app-dir fallback).
-/// - Let the user pick a custom directory.
-/// - Persist the user's preference with [SharedPreferences].
-/// - Save bytes safely, handling naming conflicts.
+
 class StorageService {
   static const String _prefKey = 'zenvix_custom_save_path';
 
-  // ── Default directory ────────────────────────────────────────────────
-
-  /// Returns the default Zenvix output directory, creating it if needed.
-  ///
-  /// Priority:
-  /// 1. `<Documents>/Zenvix/`
-  /// 2. `<ApplicationDocuments>/Zenvix/`
   Future<Directory> getDefaultZenvixDirectory() async {
     Directory? base;
 
