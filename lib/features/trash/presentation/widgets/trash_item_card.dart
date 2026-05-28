@@ -128,7 +128,6 @@ class TrashItemCard extends StatelessWidget {
                 ),
               ),
 
-              // Actions (only visible when not in selection mode)
               if (!isSelectionMode)
                 Row(
                   mainAxisSize: MainAxisSize.min,
