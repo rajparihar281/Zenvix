@@ -31,7 +31,6 @@ final List<ToolDefinition> registeredTools = [
     secondaryColor: AppColors.warning,
     routePath: '/pdf-page-manager',
   ),
-
   const ToolDefinition(
     id: 'pdf_compression',
     title: 'PDF Compress',
@@ -51,6 +50,24 @@ final List<ToolDefinition> registeredTools = [
     routePath: '/pdf-security',
   ),
   const ToolDefinition(
+    id: 'pdf_watermark',
+    title: 'PDF Watermark',
+    description: 'Add text or image watermark to every page',
+    icon: Icons.branding_watermark_rounded,
+    accentColor: AppColors.accentCyan,
+    secondaryColor: AppColors.neonBlue,
+    routePath: '/pdf-watermark',
+  ),
+  const ToolDefinition(
+    id: 'pdf_viewer',
+    title: 'PDF Viewer',
+    description: 'Browse and read any PDF file on your device',
+    icon: Icons.picture_as_pdf_rounded,
+    accentColor: AppColors.neonBlue,
+    secondaryColor: AppColors.accentCyan,
+    routePath: '/pdf-viewer',
+  ),
+  const ToolDefinition(
     id: 'qr_tools',
     title: 'QR Tools',
     description: 'Scan and generate QR codes instantly',
@@ -67,8 +84,8 @@ final List<ToolDefinition> registeredTools = [
     accentColor: AppColors.neonBlue,
     secondaryColor: AppColors.electricPurple,
     routePath: '/ocr',
+    isAvailable: false,
   ),
-
   const ToolDefinition(
     id: 'pdf_to_image',
     title: 'PDF → Image',
@@ -77,25 +94,6 @@ final List<ToolDefinition> registeredTools = [
     accentColor: AppColors.accentCyan,
     secondaryColor: AppColors.neonBlue,
     routePath: '/pdf-to-image',
-    isAvailable: false,
-  ),
-  const ToolDefinition(
-    id: 'pdf_compression',
-    title: 'PDF Compressor',
-    description: 'Reduce PDF file size without losing quality',
-    icon: Icons.compress_outlined,
-    accentColor: AppColors.success,
-    secondaryColor: AppColors.accentCyan,
-    routePath: '/pdf-compression',
-  ),
-  const ToolDefinition(
-    id: 'qr_generator',
-    title: 'QR Generator',
-    description: 'Create and scan QR codes instantly',
-    icon: Icons.qr_code_2_outlined,
-    accentColor: AppColors.warning,
-    secondaryColor: AppColors.accentPink,
-    routePath: '/qr-tools',
     isAvailable: false,
   ),
   const ToolDefinition(

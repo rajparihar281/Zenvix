@@ -3,6 +3,8 @@ import 'package:zenvix/features/batch_processor/presentation/screens/batch_progr
 import 'package:zenvix/features/home/screens/home_screen.dart';
 import 'package:zenvix/features/image_to_pdf/screens/image_to_pdf_screen.dart';
 import 'package:zenvix/features/my_files/screens/my_files_screen.dart';
+import 'package:zenvix/features/my_files/screens/pdf_viewer_picker_screen.dart';
+import 'package:zenvix/features/my_files/screens/pdf_viewer_screen.dart';
 import 'package:zenvix/features/pdf_combiner/screens/pdf_combiner_screen.dart';
 import 'package:zenvix/features/pdf_compression/presentation/screens/pdf_compression_screen.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart';
@@ -12,8 +14,11 @@ import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.da
 import 'package:zenvix/features/trash/presentation/screens/trash_screen.dart';
 import 'package:zenvix/shared/splash_screen.dart';
 
+// ignore_for_file: avoid_classes_with_only_static_members
+
 class AppRouter {
   AppRouter._();
+
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
@@ -40,6 +45,20 @@ class AppRouter {
         return _buildRoute(const PdfWatermarkScreen(), settings);
       case '/trash':
         return _buildRoute(const TrashScreen(), settings);
+      case '/pdf-viewer':
+        final args = settings.arguments;
+        if (args is Map<String, String> &&
+            args['filePath'] != null &&
+            args['fileName'] != null) {
+          return _buildRoute(
+            PdfViewerScreen(
+              filePath: args['filePath']!,
+              fileName: args['fileName']!,
+            ),
+            settings,
+          );
+        }
+        return _buildRoute(const PdfViewerPickerScreen(), settings);
       default:
         return _buildRoute(const HomeScreen(), settings);
     }
@@ -56,7 +75,6 @@ class AppRouter {
         parent: animation,
         curve: Curves.easeOutCubic,
       );
-
       return SlideTransition(
         position: Tween<Offset>(
           begin: const Offset(1, 0),
