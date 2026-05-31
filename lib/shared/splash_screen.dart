@@ -34,21 +34,21 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1800),
     );
 
-    _iconScale = Tween<double>(begin: 0.4, end: 1.0).animate(
+    _iconScale = Tween<double>(begin: 0.4, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.45, curve: Curves.elasticOut),
+        curve: const Interval(0, 0.45, curve: Curves.elasticOut),
       ),
     );
 
-    _iconOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _iconOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
+        curve: const Interval(0, 0.3, curve: Curves.easeOut),
       ),
     );
 
-    _nameOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _nameOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.35, 0.65, curve: Curves.easeOut),
@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
 
-    _taglineOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _taglineOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.6, 0.85, curve: Curves.easeOut),
