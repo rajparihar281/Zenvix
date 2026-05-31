@@ -6,10 +6,6 @@ import 'package:zenvix/core/router/app_router.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/features/pdf_viewer/screens/pdf_viewer_screen.dart';
 
-/// Root widget that owns the [NavigatorState] and listens for incoming
-/// PDF intents from Android's "Open with" / share sheet.
-///
-
 class AppLauncher extends StatefulWidget {
   const AppLauncher({
     super.key,
@@ -43,8 +39,6 @@ class _AppLauncherState extends State<AppLauncher> {
     super.dispose();
   }
 
-  // ── Terminated-state: app launched via intent ────────────────────────
-
   Future<void> _handleInitialIntent() async {
     try {
       final files = await ReceiveSharingIntent.instance.getInitialMedia();
@@ -55,15 +49,12 @@ class _AppLauncherState extends State<AppLauncher> {
       if (pdfPath == null) {
         return;
       }
-      // Wait for the navigator to be ready after the first frame.
       WidgetsBinding.instance.addPostFrameCallback((_) => _openPdf(pdfPath));
       await ReceiveSharingIntent.instance.reset();
     } on Exception catch (e) {
       debugPrint('[AppLauncher] Initial intent error: $e');
     }
   }
-
-  // ── Running-state: app receives intent while open ────────────────────
 
   void _listenForIntents() {
     _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
@@ -78,11 +69,10 @@ class _AppLauncherState extends State<AppLauncher> {
         _openPdf(pdfPath);
         ReceiveSharingIntent.instance.reset();
       },
-      onError: (Object e) => debugPrint('[AppLauncher] Intent stream error: $e'),
+      onError: (Object e) =>
+          debugPrint('[AppLauncher] Intent stream error: $e'),
     );
   }
-
-  // ── Navigation ───────────────────────────────────────────────────────
 
   void _openPdf(String path) {
     _navigatorKey.currentState?.push(
@@ -91,8 +81,6 @@ class _AppLauncherState extends State<AppLauncher> {
       ),
     );
   }
-
-  // ── Helpers ──────────────────────────────────────────────────────────
 
   String? _firstPdfPath(List<SharedMediaFile> files) {
     for (final file in files) {
