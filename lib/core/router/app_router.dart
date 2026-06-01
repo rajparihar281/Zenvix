@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zenvix/features/batch_processor/presentation/screens/batch_progress_screen.dart';
+import 'package:zenvix/features/documents/screens/document_preview_screen.dart';
 import 'package:zenvix/features/home/screens/home_screen.dart';
 import 'package:zenvix/features/image_to_pdf/screens/image_to_pdf_screen.dart';
 import 'package:zenvix/features/my_files/screens/my_files_screen.dart';
@@ -11,6 +12,7 @@ import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart
 import 'package:zenvix/features/pdf_security/presentation/screens/pdf_security_screen.dart';
 import 'package:zenvix/features/pdf_watermark/presentation/screens/pdf_watermark_screen.dart';
 import 'package:zenvix/features/qr_tools/presentation/screens/qr_tools_screen.dart';
+import 'package:zenvix/features/text_viewer/screens/text_viewer_screen.dart';
 import 'package:zenvix/features/trash/presentation/screens/trash_screen.dart';
 import 'package:zenvix/shared/splash_screen.dart';
 
@@ -59,6 +61,24 @@ class AppRouter {
           );
         }
         return _buildRoute(const PdfViewerPickerScreen(), settings);
+      case '/text-viewer':
+        final args = settings.arguments;
+        if (args is Map<String, String> && args['filePath'] != null) {
+          return _buildRoute(
+            TextViewerScreen(filePath: args['filePath']!),
+            settings,
+          );
+        }
+        return _buildRoute(const HomeScreen(), settings);
+      case '/document-preview':
+        final args = settings.arguments;
+        if (args is Map<String, String> && args['filePath'] != null) {
+          return _buildRoute(
+            DocumentPreviewScreen(filePath: args['filePath']!),
+            settings,
+          );
+        }
+        return _buildRoute(const HomeScreen(), settings);
       default:
         return _buildRoute(const HomeScreen(), settings);
     }
