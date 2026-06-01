@@ -24,7 +24,6 @@ class StorageSaveResult {
   final SaveLocation location;
 }
 
-
 class StorageService {
   static const String _prefKey = 'zenvix_custom_save_path';
 
