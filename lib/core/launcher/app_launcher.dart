@@ -1,15 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:zenvix/core/router/app_router.dart';
+import 'package:zenvix/core/services/incoming_file_service.dart';
+import 'package:zenvix/core/services/view_intent_service.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/features/pdf_viewer/screens/pdf_viewer_screen.dart';
+import 'package:zenvix/features/text_viewer/screens/text_viewer_screen.dart';
 
 /// Root widget that owns the [NavigatorState] and listens for incoming
-/// PDF intents from Android's "Open with" / share sheet.
+/// document intents from Android's "Open with" / share sheet.
 ///
-
+/// Handles both:
+/// - ACTION_SEND via `receive_sharing_intent`
+/// - ACTION_VIEW via [ViewIntentService] MethodChannel
 class AppLauncher extends StatefulWidget {
   const AppLauncher({
     super.key,
@@ -28,96 +35,210 @@ class AppLauncher extends StatefulWidget {
 
 class _AppLauncherState extends State<AppLauncher> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  StreamSubscription<List<SharedMediaFile>>? _intentSub;
+  StreamSubscription<List<SharedMediaFile>>? _sendIntentSub;
+  StreamSubscription<String>? _viewIntentSub;
+
+  // Guards against the same file being routed multiple times within a
+  // short window (both getInitialMedia and the stream can fire together).
+  String? _lastHandledPath;
+  DateTime? _lastHandledAt;
+
+  bool _isDuplicate(String path) {
+    final now = DateTime.now();
+    if (_lastHandledPath == path &&
+        _lastHandledAt != null &&
+        now.difference(_lastHandledAt!) < const Duration(seconds: 3)) {
+      return true;
+    }
+    _lastHandledPath = path;
+    _lastHandledAt = now;
+    return false;
+  }
 
   @override
   void initState() {
     super.initState();
-    _handleInitialIntent();
+    ViewIntentService.init();
+    _handleInitialIntents();
     _listenForIntents();
   }
 
   @override
   void dispose() {
-    _intentSub?.cancel();
+    _sendIntentSub?.cancel();
+    _viewIntentSub?.cancel();
     super.dispose();
   }
 
-  // ── Terminated-state: app launched via intent ────────────────────────
+  // ── Cold-start: app launched via intent ─────────────────────────────
 
-  Future<void> _handleInitialIntent() async {
+  Future<void> _handleInitialIntents() async {
+    // ACTION_VIEW cold-start (MainActivity cached the URI).
+    final viewUri = await ViewIntentService.getInitialUri();
+    if (viewUri != null) {
+      final incoming = await IncomingFileService.resolveFromUri(viewUri);
+      if (incoming != null && !_isDuplicate(incoming.path)) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _routeFile(incoming),
+        );
+        return;
+      }
+    }
+
+    // ACTION_SEND cold-start.
     try {
       final files = await ReceiveSharingIntent.instance.getInitialMedia();
-      if (files.isEmpty) {
-        return;
-      }
-      final pdfPath = _firstPdfPath(files);
-      if (pdfPath == null) {
-        return;
-      }
-      // Wait for the navigator to be ready after the first frame.
-      WidgetsBinding.instance.addPostFrameCallback((_) => _openPdf(pdfPath));
+      if (files.isEmpty) return;
+      final incoming = await IncomingFileService.resolveFirstFile(files);
+      if (incoming == null || _isDuplicate(incoming.path)) return;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _routeFile(incoming),
+      );
       await ReceiveSharingIntent.instance.reset();
     } on Exception catch (e) {
-      debugPrint('[AppLauncher] Initial intent error: $e');
+      debugPrint('[AppLauncher] Initial ACTION_SEND error: $e');
     }
   }
 
-  // ── Running-state: app receives intent while open ────────────────────
+  // ── Warm-start: app receives intent while running ────────────────────
 
   void _listenForIntents() {
-    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
-      (files) {
-        if (files.isEmpty) {
-          return;
-        }
-        final pdfPath = _firstPdfPath(files);
-        if (pdfPath == null) {
-          return;
-        }
-        _openPdf(pdfPath);
-        ReceiveSharingIntent.instance.reset();
+    // ACTION_VIEW stream.
+    _viewIntentSub = ViewIntentService.uriStream.listen((uri) async {
+      final incoming = await IncomingFileService.resolveFromUri(uri);
+      if (incoming != null && !_isDuplicate(incoming.path)) {
+        _routeFile(incoming);
+      }
+    });
+
+    // ACTION_SEND stream.
+    _sendIntentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
+      (files) async {
+        if (files.isEmpty) return;
+        final incoming = await IncomingFileService.resolveFirstFile(files);
+        if (incoming == null || _isDuplicate(incoming.path)) return;
+        _routeFile(incoming);
+        await ReceiveSharingIntent.instance.reset();
       },
-      onError: (Object e) => debugPrint('[AppLauncher] Intent stream error: $e'),
+      onError: (Object e) =>
+          debugPrint('[AppLauncher] ACTION_SEND stream error: $e'),
     );
   }
 
-  // ── Navigation ───────────────────────────────────────────────────────
+  // ── File routing ─────────────────────────────────────────────────────
 
-  void _openPdf(String path) {
-    _navigatorKey.currentState?.push(
-      MaterialPageRoute<PdfViewerScreen>(
-        builder: (_) => PdfViewerScreen(filePath: path),
+  void _routeFile(IncomingFile file) {
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) return;
+
+    debugPrint('[AppLauncher] Routing ${file.fileName} → ${file.category.name}');
+
+    switch (file.category) {
+      case IncomingFileCategory.pdf:
+        navigator.push(
+          MaterialPageRoute<PdfViewerScreen>(
+            builder: (_) => PdfViewerScreen(filePath: file.path),
+          ),
+        );
+
+      case IncomingFileCategory.text:
+        navigator.push(
+          MaterialPageRoute<TextViewerScreen>(
+            builder: (_) => TextViewerScreen(filePath: file.path),
+          ),
+        );
+
+      // For document/spreadsheet/presentation: skip Zenvix UI entirely
+      // and launch the system app chooser directly.
+      case IncomingFileCategory.document:
+      case IncomingFileCategory.presentation:
+      case IncomingFileCategory.spreadsheet:
+        _openWithSystemChooser(file);
+
+      case IncomingFileCategory.unsupported:
+        _showUnsupportedSnackBar(file.fileName);
+    }
+  }
+
+  static const _channel = MethodChannel('com.Zenvix.Zenvix/incoming_file');
+
+  static const Map<IncomingFileCategory, String> _categoryMime = {
+    IncomingFileCategory.document:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    IncomingFileCategory.presentation:
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    IncomingFileCategory.spreadsheet:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  };
+
+  /// Resolves a precise MIME type from the file extension, falling back to
+  /// the category-level default.
+  String _mimeFor(IncomingFile file) {
+    final ext = p.extension(file.path).toLowerCase();
+    const extMime = {
+      '.doc': 'application/msword',
+      '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.ppt': 'application/vnd.ms-powerpoint',
+      '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      '.xls': 'application/vnd.ms-excel',
+      '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.csv': 'text/csv',
+    };
+    return extMime[ext] ?? _categoryMime[file.category] ?? 'application/octet-stream';
+  }
+
+  Future<void> _openWithSystemChooser(IncomingFile file) async {
+    try {
+      final contentUri = await _channel.invokeMethod<String>(
+        'getContentUri',
+        file.path,
+      );
+      if (contentUri == null || contentUri.isEmpty) {
+        throw PlatformException(code: 'URI_FAILED', message: 'No URI returned');
+      }
+      await _channel.invokeMethod<void>('openFile', {
+        'uri': contentUri,
+        'mimeType': _mimeFor(file),
+      });
+    } on PlatformException catch (e) {
+      debugPrint('[AppLauncher] openWithSystem failed: $e');
+      _showUnsupportedSnackBar(file.fileName);
+    }
+  }
+
+  void _showUnsupportedSnackBar(String fileName) {
+    final context = _navigatorKey.currentContext;
+    if (context == null) return;
+
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      SnackBar(
+        content: Text(
+          'Unsupported file: $fileName',
+          style: const TextStyle(color: AppColors.textPrimary),
+        ),
+        backgroundColor: AppColors.surface,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          textColor: AppColors.neonBlue,
+          onPressed: () {},
+        ),
       ),
     );
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────
-
-  String? _firstPdfPath(List<SharedMediaFile> files) {
-    for (final file in files) {
-      final path = file.path;
-      if (path.toLowerCase().endsWith('.pdf')) {
-        return path;
-      }
-      if (file.mimeType?.toLowerCase().contains('pdf') == true) {
-        return path;
-      }
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: widget.appTitle,
-    debugShowCheckedModeBanner: false,
-    navigatorKey: _navigatorKey,
-    theme: widget.theme,
-    initialRoute: widget.initialRoute,
-    onGenerateRoute: AppRouter.onGenerateRoute,
-    builder: (context, child) => ColoredBox(
-      color: AppColors.background,
-      child: child ?? const SizedBox.shrink(),
-    ),
-  );
+        title: widget.appTitle,
+        debugShowCheckedModeBanner: false,
+        navigatorKey: _navigatorKey,
+        theme: widget.theme,
+        initialRoute: widget.initialRoute,
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        builder: (context, child) => ColoredBox(
+          color: AppColors.background,
+          child: child ?? const SizedBox.shrink(),
+        ),
+      );
 }
