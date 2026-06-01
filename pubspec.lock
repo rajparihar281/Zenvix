@@ -736,14 +736,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  receive_multi_sharing_intent:
-    dependency: "direct main"
-    description:
-      name: receive_multi_sharing_intent
-      sha256: "46b59209e7f18c15961c40b6c3ed491962f59197a66615d63614bf7c876bf8b0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.6"
   receive_sharing_intent:
     dependency: "direct main"
     description:
