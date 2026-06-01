@@ -124,8 +124,7 @@ class IncomingFileService {
       if (localPath.isEmpty) return null;
 
       final ext = p.extension(localPath).toLowerCase();
-      final category =
-          _extensionMap[ext] ?? IncomingFileCategory.unsupported;
+      final category = _extensionMap[ext] ?? IncomingFileCategory.unsupported;
 
       return IncomingFile(
         path: localPath,
@@ -213,9 +212,7 @@ class IncomingFileService {
         return originalPath;
       }
 
-      final incomingDir = Directory(
-        p.join(cacheDir.path, 'zenvix_incoming'),
-      );
+      final incomingDir = Directory(p.join(cacheDir.path, 'zenvix_incoming'));
       if (!incomingDir.existsSync()) {
         incomingDir.createSync(recursive: true);
       }
