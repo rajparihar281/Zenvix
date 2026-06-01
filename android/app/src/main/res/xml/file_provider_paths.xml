@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path name="zenvix_cache" path="." />
+    <external-cache-path name="zenvix_external_cache" path="." />
+    <files-path name="zenvix_files" path="." />
+    <external-files-path name="zenvix_external_files" path="." />
+</paths>
