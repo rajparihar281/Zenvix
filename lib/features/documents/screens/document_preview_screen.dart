@@ -14,10 +14,7 @@ import 'package:zenvix/core/theme/app_theme.dart';
 /// Shows file metadata, an animated icon, and a prominent "Open with…"
 /// button that delegates to the system's default handler.
 class DocumentPreviewScreen extends StatelessWidget {
-  const DocumentPreviewScreen({
-    super.key,
-    required this.filePath,
-  });
+  const DocumentPreviewScreen({super.key, required this.filePath});
 
   /// Absolute path to the document file.
   final String filePath;
@@ -27,14 +24,22 @@ class DocumentPreviewScreen extends StatelessWidget {
 
   String get _mimeTypeForExtension {
     switch (_extension) {
-      case '.doc': return 'application/msword';
-      case '.docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      case '.ppt': return 'application/vnd.ms-powerpoint';
-      case '.pptx': return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
-      case '.xls': return 'application/vnd.ms-excel';
-      case '.xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      case '.csv': return 'text/csv';
-      default: return 'application/octet-stream';
+      case '.doc':
+        return 'application/msword';
+      case '.docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      case '.ppt':
+        return 'application/vnd.ms-powerpoint';
+      case '.pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+      case '.xls':
+        return 'application/vnd.ms-excel';
+      case '.xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      case '.csv':
+        return 'text/csv';
+      default:
+        return 'application/octet-stream';
     }
   }
 
@@ -132,18 +137,16 @@ class DocumentPreviewScreen extends StatelessWidget {
   }
 
   Future<void> _share() async {
-    await Share.shareXFiles(
-      [XFile(filePath)],
-      text: 'Shared from Zenvix',
-    );
+    await Share.shareXFiles([XFile(filePath)], text: 'Shared from Zenvix');
   }
 
   @override
   Widget build(BuildContext context) {
     final meta = _meta;
     final file = File(filePath);
-    final fileSize =
-        file.existsSync() ? _formatBytes(file.lengthSync()) : 'Unknown';
+    final fileSize = file.existsSync()
+        ? _formatBytes(file.lengthSync())
+        : 'Unknown';
     final lastModified = file.existsSync()
         ? file.lastModifiedSync().toLocal().toString().split('.').first
         : 'Unknown';
@@ -174,10 +177,7 @@ class DocumentPreviewScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // ── Animated icon ──────────────────────────────────────
-              _AnimatedDocIcon(
-                icon: meta.icon,
-                color: meta.color,
-              ),
+              _AnimatedDocIcon(icon: meta.icon, color: meta.color),
               const SizedBox(height: AppTheme.spacingLG),
 
               // ── File type badge ────────────────────────────────────
@@ -189,9 +189,7 @@ class DocumentPreviewScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: meta.color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: meta.color.withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: meta.color.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   meta.label,
@@ -308,10 +306,7 @@ class DocumentPreviewScreen extends StatelessWidget {
 // ── Private helper widgets ─────────────────────────────────────────────
 
 class _AnimatedDocIcon extends StatefulWidget {
-  const _AnimatedDocIcon({
-    required this.icon,
-    required this.color,
-  });
+  const _AnimatedDocIcon({required this.icon, required this.color});
 
   final IconData icon;
   final Color color;
@@ -334,12 +329,14 @@ class _AnimatedDocIconState extends State<_AnimatedDocIcon>
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
-    _scale = Tween<double>(begin: 1, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _glow = Tween<double>(begin: 0.15, end: 0.35).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _glow = Tween<double>(
+      begin: 0.15,
+      end: 0.35,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -350,31 +347,27 @@ class _AnimatedDocIconState extends State<_AnimatedDocIcon>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _controller,
-        builder: (_, unused) => Transform.scale(
-          scale: _scale.value,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: widget.color.withValues(alpha: 0.1),
-              boxShadow: [
-                BoxShadow(
-                  color: widget.color.withValues(alpha: _glow.value),
-                  blurRadius: 40,
-                  spreadRadius: 8,
-                ),
-              ],
+    animation: _controller,
+    builder: (_, unused) => Transform.scale(
+      scale: _scale.value,
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: widget.color.withValues(alpha: 0.1),
+          boxShadow: [
+            BoxShadow(
+              color: widget.color.withValues(alpha: _glow.value),
+              blurRadius: 40,
+              spreadRadius: 8,
             ),
-            child: Icon(
-              widget.icon,
-              size: 48,
-              color: widget.color,
-            ),
-          ),
+          ],
         ),
-      );
+        child: Icon(widget.icon, size: 48, color: widget.color),
+      ),
+    ),
+  );
 }
 
 class _MetadataRow extends StatelessWidget {
@@ -385,38 +378,35 @@ class _MetadataRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.surfaceBorder),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    decoration: BoxDecoration(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: AppColors.surfaceBorder),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 13,
-              ),
+        Flexible(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
-            Flexible(
-              child: Text(
-                value,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.right,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+            textAlign: TextAlign.right,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 /// Internal metadata holder for document types.

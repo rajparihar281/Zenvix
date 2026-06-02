@@ -31,10 +31,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   Future<void> _share() async {
-    await Share.shareXFiles(
-      [XFile(widget.filePath)],
-      text: 'Shared from Zenvix',
-    );
+    await Share.shareXFiles([
+      XFile(widget.filePath),
+    ], text: 'Shared from Zenvix');
   }
 
   @override

@@ -34,14 +34,12 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     super.dispose();
   }
 
-  String get _fileName =>
-      widget.filePath.split('/').last.split(r'\').last;
+  String get _fileName => widget.filePath.split('/').last.split(r'\').last;
 
   Future<void> _share() async {
-    await Share.shareXFiles(
-      [XFile(widget.filePath)],
-      text: 'Shared from Zenvix',
-    );
+    await Share.shareXFiles([
+      XFile(widget.filePath),
+    ], text: 'Shared from Zenvix');
   }
 
   void _retry() {

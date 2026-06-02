@@ -91,9 +91,7 @@ class _AppLauncherState extends State<AppLauncher> {
       if (files.isEmpty) return;
       final incoming = await IncomingFileService.resolveFirstFile(files);
       if (incoming == null || _isDuplicate(incoming.path)) return;
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _routeFile(incoming),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) => _routeFile(incoming));
       await ReceiveSharingIntent.instance.reset();
     } on Exception catch (e) {
       debugPrint('[AppLauncher] Initial ACTION_SEND error: $e');
@@ -131,7 +129,9 @@ class _AppLauncherState extends State<AppLauncher> {
     final navigator = _navigatorKey.currentState;
     if (navigator == null) return;
 
-    debugPrint('[AppLauncher] Routing ${file.fileName} → ${file.category.name}');
+    debugPrint(
+      '[AppLauncher] Routing ${file.fileName} → ${file.category.name}',
+    );
 
     switch (file.category) {
       case IncomingFileCategory.pdf:
@@ -177,14 +177,19 @@ class _AppLauncherState extends State<AppLauncher> {
     final ext = p.extension(file.path).toLowerCase();
     const extMime = {
       '.doc': 'application/msword',
-      '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.docx':
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       '.ppt': 'application/vnd.ms-powerpoint',
-      '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      '.pptx':
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       '.xls': 'application/vnd.ms-excel',
-      '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xlsx':
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       '.csv': 'text/csv',
     };
-    return extMime[ext] ?? _categoryMime[file.category] ?? 'application/octet-stream';
+    return extMime[ext] ??
+        _categoryMime[file.category] ??
+        'application/octet-stream';
   }
 
   Future<void> _openWithSystemChooser(IncomingFile file) async {
@@ -230,15 +235,15 @@ class _AppLauncherState extends State<AppLauncher> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: widget.appTitle,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: _navigatorKey,
-        theme: widget.theme,
-        initialRoute: widget.initialRoute,
-        onGenerateRoute: AppRouter.onGenerateRoute,
-        builder: (context, child) => ColoredBox(
-          color: AppColors.background,
-          child: child ?? const SizedBox.shrink(),
-        ),
-      );
+    title: widget.appTitle,
+    debugShowCheckedModeBanner: false,
+    navigatorKey: _navigatorKey,
+    theme: widget.theme,
+    initialRoute: widget.initialRoute,
+    onGenerateRoute: AppRouter.onGenerateRoute,
+    builder: (context, child) => ColoredBox(
+      color: AppColors.background,
+      child: child ?? const SizedBox.shrink(),
+    ),
+  );
 }
