@@ -16,10 +16,7 @@ class PdfLoadingWidget extends StatelessWidget {
           SizedBox(height: AppTheme.spacingMD),
           Text(
             'Loading PDF...',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
           ),
         ],
       ),
