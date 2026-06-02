@@ -34,7 +34,9 @@ class _PdfViewerPickerScreenState extends State<PdfViewerPickerScreen> {
         return;
       }
 
-      if (result == null || result.files.isEmpty || result.files.first.path == null) {
+      if (result == null ||
+          result.files.isEmpty ||
+          result.files.first.path == null) {
         setState(() => _loading = false);
         return;
       }
@@ -44,10 +46,8 @@ class _PdfViewerPickerScreenState extends State<PdfViewerPickerScreen> {
       await Navigator.push(
         context,
         MaterialPageRoute<PdfViewerScreen>(
-          builder: (_) => PdfViewerScreen(
-            filePath: file.path!,
-            fileName: file.name,
-          ),
+          builder: (_) =>
+              PdfViewerScreen(filePath: file.path!, fileName: file.name),
         ),
       );
     } on Exception catch (e) {
