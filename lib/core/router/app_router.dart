@@ -5,7 +5,7 @@ import 'package:zenvix/features/home/screens/home_screen.dart';
 import 'package:zenvix/features/image_to_pdf/screens/image_to_pdf_screen.dart';
 import 'package:zenvix/features/my_files/screens/my_files_screen.dart';
 import 'package:zenvix/features/my_files/screens/pdf_viewer_picker_screen.dart';
-import 'package:zenvix/features/my_files/screens/pdf_viewer_screen.dart';
+import 'package:zenvix/features/pdf_viewer/screens/pdf_viewer_screen.dart';
 import 'package:zenvix/features/pdf_combiner/screens/pdf_combiner_screen.dart';
 import 'package:zenvix/features/pdf_compression/presentation/screens/pdf_compression_screen.dart';
 import 'package:zenvix/features/pdf_page_manager/ui/pdf_page_manager_screen.dart';
@@ -49,14 +49,9 @@ class AppRouter {
         return _buildRoute(const TrashScreen(), settings);
       case '/pdf-viewer':
         final args = settings.arguments;
-        if (args is Map<String, String> &&
-            args['filePath'] != null &&
-            args['fileName'] != null) {
+        if (args is Map<String, String> && args['filePath'] != null) {
           return _buildRoute(
-            PdfViewerScreen(
-              filePath: args['filePath']!,
-              fileName: args['fileName']!,
-            ),
+            PdfViewerScreen(filePath: args['filePath']!),
             settings,
           );
         }
