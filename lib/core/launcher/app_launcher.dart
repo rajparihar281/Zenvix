@@ -88,9 +88,13 @@ class _AppLauncherState extends State<AppLauncher> {
     // ACTION_SEND cold-start.
     try {
       final files = await ReceiveSharingIntent.instance.getInitialMedia();
-      if (files.isEmpty) return;
+      if (files.isEmpty) {
+        return;
+      }
       final incoming = await IncomingFileService.resolveFirstFile(files);
-      if (incoming == null || _isDuplicate(incoming.path)) return;
+      if (incoming == null || _isDuplicate(incoming.path)) {
+        return;
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) => _routeFile(incoming));
       await ReceiveSharingIntent.instance.reset();
     } on Exception catch (e) {
@@ -112,9 +116,13 @@ class _AppLauncherState extends State<AppLauncher> {
     // ACTION_SEND stream.
     _sendIntentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
       (files) async {
-        if (files.isEmpty) return;
+        if (files.isEmpty) {
+          return;
+        }
         final incoming = await IncomingFileService.resolveFirstFile(files);
-        if (incoming == null || _isDuplicate(incoming.path)) return;
+        if (incoming == null || _isDuplicate(incoming.path)) {
+          return;
+        }
         _routeFile(incoming);
         await ReceiveSharingIntent.instance.reset();
       },
@@ -127,7 +135,9 @@ class _AppLauncherState extends State<AppLauncher> {
 
   void _routeFile(IncomingFile file) {
     final navigator = _navigatorKey.currentState;
-    if (navigator == null) return;
+    if (navigator == null) {
+      return;
+    }
 
     debugPrint(
       '[AppLauncher] Routing ${file.fileName} → ${file.category.name}',
@@ -213,7 +223,9 @@ class _AppLauncherState extends State<AppLauncher> {
 
   void _showUnsupportedSnackBar(String fileName) {
     final context = _navigatorKey.currentContext;
-    if (context == null) return;
+    if (context == null) {
+      return;
+    }
 
     ScaffoldMessenger.maybeOf(context)?.showSnackBar(
       SnackBar(
