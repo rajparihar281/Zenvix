@@ -121,7 +121,9 @@ class IncomingFileService {
         localPath = uri.toFilePath();
       }
 
-      if (localPath.isEmpty) return null;
+      if (localPath.isEmpty) {
+        return null;
+      }
 
       final ext = p.extension(localPath).toLowerCase();
       final category = _extensionMap[ext] ?? IncomingFileCategory.unsupported;
