@@ -52,22 +52,30 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _quickOpen(ToolCategory category) async {
     final extensions = _categoryExtensions[category];
-    if (extensions == null || extensions.isEmpty) return;
+    if (extensions == null || extensions.isEmpty) {
+      return;
+    }
 
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensions,
     );
-    if (result == null || result.files.isEmpty) return;
+    if (result == null || result.files.isEmpty) {
+      return;
+    }
 
     final filePath = result.files.first.path;
-    if (filePath == null || !mounted) return;
+    if (filePath == null || !mounted) {
+      return;
+    }
 
     final ext = p.extension(filePath).toLowerCase();
     final route = _routeForExtension(ext);
-    if (route == null) return;
+    if (route == null) {
+      return;
+    }
 
-    Navigator.pushNamed(
+    await Navigator.pushNamed(
       context,
       route,
       arguments: {'filePath': filePath, 'fileName': p.basename(filePath)},
@@ -243,7 +251,9 @@ class _HomeScreenState extends State<HomeScreen>
     final tools = registeredTools
         .where((t) => t.category == category)
         .toList();
-    if (tools.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    if (tools.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     final available = tools.where((t) => t.isAvailable).toList();
     final unavailable = tools.where((t) => !t.isAvailable).toList();
@@ -291,13 +301,13 @@ class _HomeScreenState extends State<HomeScreen>
                           border: Border.all(color: AppColors.surfaceBorder),
                         ),
                         child: Row(
-                          children: [
+                          children: const [
                             Icon(
                               Icons.folder_open_outlined,
                               size: 13,
                               color: AppColors.textTertiary,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               'Open file',
                               style: TextStyle(

@@ -235,8 +235,12 @@ class _TextViewerScreenState extends State<TextViewerScreen> {
   );
 
   Widget _buildBody() {
-    if (_isLoading) return _buildLoadingState();
-    if (_hasError) return _buildErrorState();
+    if (_isLoading) {
+      return _buildLoadingState();
+    }
+    if (_hasError) {
+      return _buildErrorState();
+    }
     return _buildContentView();
   }
 
