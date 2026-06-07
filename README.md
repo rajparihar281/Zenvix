@@ -149,12 +149,6 @@ flutter build ios --release
 * `feature/*` – feature branches
 * `release/*` – release preparation
 
-Commit conventions:
-
-* `feat:` feature
-* `fix:` bug fix
-* `refactor:` improvements
-* `chore:` maintenance
 
 ---
 
