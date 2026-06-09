@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ToolCategory {
-  pdf,
-  documents,
-  utilities,
-}
+enum ToolCategory { pdf, documents, utilities }
 
 extension ToolCategoryX on ToolCategory {
   String get label {

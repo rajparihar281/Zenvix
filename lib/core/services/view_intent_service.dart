@@ -9,7 +9,6 @@ class ViewIntentService {
 
   static final _controller = StreamController<String>.broadcast();
 
- 
   static Stream<String> get uriStream => _controller.stream;
 
   /// Must be called once during app initialisation (before runApp).
