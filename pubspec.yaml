@@ -1,10 +1,10 @@
 name: zenvix
 description: "Zenvix â€” A premium multi-tool utility app for OLED devices."
 publish_to: 'none'
-version: 1.2.0+3
+version: 1.3.0+4
 
 environment:
-  sdk: ^3.11.1
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
@@ -30,6 +30,8 @@ dependencies:
   path_provider: ^2.1.5
   share_plus: ^10.1.4
   shared_preferences: ^2.3.3
+  receive_sharing_intent: ^1.8.1
+
   # Image processing
   image: ^4.5.3
   image_cropper: ^8.0.2
@@ -52,9 +54,6 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   path: ^1.9.1
   syncfusion_flutter_pdfviewer: ^33.2.8
-
-  # Intent handling
-  receive_sharing_intent: ^1.8.1
 
 dev_dependencies:
   flutter_test:
