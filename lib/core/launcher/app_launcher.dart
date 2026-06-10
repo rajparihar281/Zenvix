@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path/path.dart' as p;
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:zenvix/core/router/app_router.dart';
 import 'package:zenvix/core/services/incoming_file_service.dart';
@@ -158,66 +156,11 @@ class _AppLauncherState extends State<AppLauncher> {
           ),
         );
 
-      // For document/spreadsheet/presentation: skip Zenvix UI entirely
-      // and launch the system app chooser directly.
       case IncomingFileCategory.document:
       case IncomingFileCategory.presentation:
       case IncomingFileCategory.spreadsheet:
-        _openWithSystemChooser(file);
-
       case IncomingFileCategory.unsupported:
         _showUnsupportedSnackBar(file.fileName);
-    }
-  }
-
-  static const _channel = MethodChannel('com.Zenvix.Zenvix/incoming_file');
-
-  static const Map<IncomingFileCategory, String> _categoryMime = {
-    IncomingFileCategory.document:
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    IncomingFileCategory.presentation:
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    IncomingFileCategory.spreadsheet:
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  };
-
-  /// Resolves a precise MIME type from the file extension, falling back to
-  /// the category-level default.
-  String _mimeFor(IncomingFile file) {
-    final ext = p.extension(file.path).toLowerCase();
-    const extMime = {
-      '.doc': 'application/msword',
-      '.docx':
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      '.ppt': 'application/vnd.ms-powerpoint',
-      '.pptx':
-          'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      '.xls': 'application/vnd.ms-excel',
-      '.xlsx':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      '.csv': 'text/csv',
-    };
-    return extMime[ext] ??
-        _categoryMime[file.category] ??
-        'application/octet-stream';
-  }
-
-  Future<void> _openWithSystemChooser(IncomingFile file) async {
-    try {
-      final contentUri = await _channel.invokeMethod<String>(
-        'getContentUri',
-        file.path,
-      );
-      if (contentUri == null || contentUri.isEmpty) {
-        throw PlatformException(code: 'URI_FAILED', message: 'No URI returned');
-      }
-      await _channel.invokeMethod<void>('openFile', {
-        'uri': contentUri,
-        'mimeType': _mimeFor(file),
-      });
-    } on PlatformException catch (e) {
-      debugPrint('[AppLauncher] openWithSystem failed: $e');
-      _showUnsupportedSnackBar(file.fileName);
     }
   }
 

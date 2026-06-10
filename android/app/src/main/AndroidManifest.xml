@@ -42,102 +42,6 @@
             </intent-filter>
 
             <!-- ════════════════════════════════════════════════════════ -->
-            <!-- ACTION_VIEW — Word documents                            -->
-            <!-- ════════════════════════════════════════════════════════ -->
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/msword"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/msword"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
-            </intent-filter>
-
-            <!-- ════════════════════════════════════════════════════════ -->
-            <!-- ACTION_VIEW — PowerPoint presentations                  -->
-            <!-- ════════════════════════════════════════════════════════ -->
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/vnd.ms-powerpoint"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/vnd.ms-powerpoint"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
-            </intent-filter>
-
-            <!-- ════════════════════════════════════════════════════════ -->
-            <!-- ACTION_VIEW — Excel / CSV spreadsheets                  -->
-            <!-- ════════════════════════════════════════════════════════ -->
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/vnd.ms-excel"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="content" android:mimeType="text/csv"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/vnd.ms-excel"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-            </intent-filter>
-            <intent-filter android:label="Open with Zenvix">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file" android:mimeType="text/csv"/>
-            </intent-filter>
-
-            <!-- ════════════════════════════════════════════════════════ -->
             <!-- ACTION_VIEW — Text / Markup files                       -->
             <!-- ════════════════════════════════════════════════════════ -->
             <intent-filter android:label="Open with Zenvix">
@@ -212,41 +116,6 @@
             <intent-filter android:label="Share to Zenvix">
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/msword"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.ms-powerpoint"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.ms-excel"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/csv"/>
-            </intent-filter>
-            <intent-filter android:label="Share to Zenvix">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
             <intent-filter android:label="Share to Zenvix">
@@ -280,13 +149,6 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="content" android:mimeType="application/octet-stream"/>
                 <data android:pathPattern=".*\\.pdf"/>
-                <data android:pathPattern=".*\\.doc"/>
-                <data android:pathPattern=".*\\.docx"/>
-                <data android:pathPattern=".*\\.ppt"/>
-                <data android:pathPattern=".*\\.pptx"/>
-                <data android:pathPattern=".*\\.xls"/>
-                <data android:pathPattern=".*\\.xlsx"/>
-                <data android:pathPattern=".*\\.csv"/>
                 <data android:pathPattern=".*\\.txt"/>
                 <data android:pathPattern=".*\\.json"/>
                 <data android:pathPattern=".*\\.xml"/>
