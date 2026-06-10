@@ -108,7 +108,7 @@ class _ImageEditorScreenState extends ConsumerState<ImageEditorScreen> {
                     child: Image.file(
                       File(_edited.originalPath),
                       fit: BoxFit.contain,
-                      errorBuilder: (_ctx, _err, _st) => const Icon(
+                      errorBuilder: (ctx, err, st) => const Icon(
                         Icons.broken_image,
                         size: 80,
                         color: AppColors.textTertiary,

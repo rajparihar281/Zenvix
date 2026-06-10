@@ -98,7 +98,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen> {
           IconButton(
             icon: ValueListenableBuilder<MobileScannerState>(
               valueListenable: _controller,
-              builder: (_, scannerState, __) => Icon(
+              builder: (context2, scannerState, child) => Icon(
                 scannerState.torchState == TorchState.on
                     ? Icons.flash_on_rounded
                     : Icons.flash_off_rounded,

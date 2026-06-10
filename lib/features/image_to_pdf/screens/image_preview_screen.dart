@@ -90,7 +90,7 @@ class ImagePreviewScreen extends ConsumerWidget {
                         width: 56,
                         height: 56,
                         fit: BoxFit.cover,
-                        errorBuilder: (_ctx, _err, _st) => Container(
+                        errorBuilder: (ctx, err, st) => Container(
                           width: 56,
                           height: 56,
                           color: AppColors.surfaceLight,
