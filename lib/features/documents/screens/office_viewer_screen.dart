@@ -19,8 +19,7 @@ class OfficeViewerScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.surface,
@@ -72,5 +71,4 @@ class OfficeViewerScreen extends StatelessWidget {
         },
       ),
     );
-  }
 }
