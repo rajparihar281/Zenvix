@@ -104,13 +104,14 @@ class _HomeScreenState extends State<HomeScreen>
       case '.md':
         return '/text-viewer';
       case '.doc':
-      case '.docx':
       case '.ppt':
-      case '.pptx':
       case '.xls':
-      case '.xlsx':
       case '.csv':
         return '/document-preview';
+      case '.docx':
+      case '.pptx':
+      case '.xlsx':
+        return '/office-viewer';
       default:
         return null;
     }
