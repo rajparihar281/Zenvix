@@ -91,25 +91,10 @@ class AppDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Logo / icon
-                  Container(
+                  Image.asset(
+                    'assets/logo/logo.png',
                     width: 52,
                     height: 52,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: AppColors.accentGradient,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.neonBlue.withValues(alpha: 0.3),
-                          blurRadius: 16,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.construction_rounded,
-                      color: Colors.black,
-                      size: 26,
-                    ),
                   ),
                   const SizedBox(height: AppTheme.spacingMD),
                   // App name
