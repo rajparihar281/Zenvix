@@ -2,7 +2,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
-
 import 'package:zenvix/core/constants/app_strings.dart';
 import 'package:zenvix/core/models/tool_definition.dart';
 import 'package:zenvix/core/registry/tool_registry.dart';
@@ -146,18 +145,10 @@ class _HomeScreenState extends State<HomeScreen>
     elevation: 0,
     title: Row(
       children: [
-        Container(
+        Image.asset(
+          'assets/logo/logo.png',
           width: 32,
           height: 32,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: AppColors.accentGradient,
-          ),
-          child: const Icon(
-            Icons.construction_rounded,
-            color: Colors.black,
-            size: 18,
-          ),
         ),
         const SizedBox(width: 10),
         const Text(AppStrings.appName),

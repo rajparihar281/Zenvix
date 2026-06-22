@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zenvix/core/constants/app_strings.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -97,30 +96,10 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _iconOpacity.value,
               child: Transform.scale(scale: _iconScale.value, child: child),
             ),
-            child: Container(
+            child: Image.asset(
+              'assets/logo/logo.png',
               width: 88,
               height: 88,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: AppColors.accentGradient,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.neonBlue.withValues(alpha: 0.35),
-                    blurRadius: 32,
-                    spreadRadius: 4,
-                  ),
-                  BoxShadow(
-                    color: AppColors.electricPurple.withValues(alpha: 0.2),
-                    blurRadius: 48,
-                    spreadRadius: 8,
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.construction_rounded,
-                color: Colors.black,
-                size: 42,
-              ),
             ),
           ),
 
