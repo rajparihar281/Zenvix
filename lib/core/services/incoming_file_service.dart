@@ -11,14 +11,7 @@ enum IncomingFileCategory {
   /// PDF documents — opened in the built-in PDF viewer.
   pdf,
 
-  /// Word documents (.doc, .docx) — opened in document preview.
-  document,
 
-  /// PowerPoint presentations (.ppt, .pptx) — opened in document preview.
-  presentation,
-
-  /// Spreadsheets (.xls, .xlsx, .csv) — opened in spreadsheet viewer.
-  spreadsheet,
 
   /// Text / code files (.txt, .json, .xml, .md) — opened in text viewer.
   text,
@@ -61,13 +54,7 @@ class IncomingFileService {
 
   static const Map<String, IncomingFileCategory> _extensionMap = {
     '.pdf': IncomingFileCategory.pdf,
-    '.doc': IncomingFileCategory.document,
-    '.docx': IncomingFileCategory.document,
-    '.ppt': IncomingFileCategory.presentation,
-    '.pptx': IncomingFileCategory.presentation,
-    '.xls': IncomingFileCategory.spreadsheet,
-    '.xlsx': IncomingFileCategory.spreadsheet,
-    '.csv': IncomingFileCategory.spreadsheet,
+
     '.txt': IncomingFileCategory.text,
     '.json': IncomingFileCategory.text,
     '.xml': IncomingFileCategory.text,
@@ -78,16 +65,7 @@ class IncomingFileService {
 
   static const Map<String, IncomingFileCategory> _mimeMap = {
     'application/pdf': IncomingFileCategory.pdf,
-    'application/msword': IncomingFileCategory.document,
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        IncomingFileCategory.document,
-    'application/vnd.ms-powerpoint': IncomingFileCategory.presentation,
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-        IncomingFileCategory.presentation,
-    'application/vnd.ms-excel': IncomingFileCategory.spreadsheet,
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        IncomingFileCategory.spreadsheet,
-    'text/csv': IncomingFileCategory.spreadsheet,
+
     'text/plain': IncomingFileCategory.text,
     'application/json': IncomingFileCategory.text,
     'text/xml': IncomingFileCategory.text,

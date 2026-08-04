@@ -6,8 +6,7 @@ import 'package:zenvix/core/router/app_router.dart';
 import 'package:zenvix/core/services/incoming_file_service.dart';
 import 'package:zenvix/core/services/view_intent_service.dart';
 import 'package:zenvix/core/theme/app_colors.dart';
-import 'package:zenvix/features/documents/screens/document_preview_screen.dart';
-import 'package:zenvix/features/documents/screens/office_viewer_screen.dart';
+
 import 'package:zenvix/features/pdf_viewer/screens/pdf_viewer_screen.dart';
 import 'package:zenvix/features/text_viewer/screens/text_viewer_screen.dart';
 
@@ -158,21 +157,7 @@ class _AppLauncherState extends State<AppLauncher> {
           ),
         );
 
-      case IncomingFileCategory.document:
-      case IncomingFileCategory.presentation:
-      case IncomingFileCategory.spreadsheet:
-        navigator.push(
-          MaterialPageRoute<Widget>(
-            builder: (_) {
-              final ext = file.path.toLowerCase();
-              if (ext.endsWith('.doc') || ext.endsWith('.xls') || ext.endsWith('.ppt') || ext.endsWith('.csv')) {
-                // microsoft_viewer only supports modern .docx, .xlsx, .pptx formats
-                return DocumentPreviewScreen(filePath: file.path);
-              }
-              return OfficeViewerScreen(filePath: file.path);
-            },
-          ),
-        );
+
 
       case IncomingFileCategory.unsupported:
         _showUnsupportedSnackBar(file.fileName);
