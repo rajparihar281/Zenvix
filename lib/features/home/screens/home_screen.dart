@@ -25,13 +25,6 @@ class _HomeScreenState extends State<HomeScreen>
   static const Map<ToolCategory, List<String>> _categoryExtensions = {
     ToolCategory.pdf: ['pdf'],
     ToolCategory.documents: [
-      'doc',
-      'docx',
-      'ppt',
-      'pptx',
-      'xls',
-      'xlsx',
-      'csv',
       'txt',
       'json',
       'xml',
@@ -102,15 +95,6 @@ class _HomeScreenState extends State<HomeScreen>
       case '.xml':
       case '.md':
         return '/text-viewer';
-      case '.doc':
-      case '.ppt':
-      case '.xls':
-      case '.csv':
-        return '/document-preview';
-      case '.docx':
-      case '.pptx':
-      case '.xlsx':
-        return '/office-viewer';
       default:
         return null;
     }
@@ -222,13 +206,6 @@ class _HomeScreenState extends State<HomeScreen>
               icon: Icons.picture_as_pdf_rounded,
               color: AppColors.neonBlue,
               onTap: () => _quickOpen(ToolCategory.pdf),
-            ),
-            const SizedBox(width: 10),
-            _QuickOpenChip(
-              label: 'Word / Excel',
-              icon: Icons.description_outlined,
-              color: AppColors.electricPurple,
-              onTap: () => _quickOpen(ToolCategory.documents),
             ),
             const SizedBox(width: 10),
             _QuickOpenChip(
