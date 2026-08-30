@@ -1,78 +1,62 @@
 import 'package:flutter/material.dart';
 
-/// Zenvix color palette â€” Premium OLED-optimized dark theme.
-///
-/// Pure blacks save battery on OLED panels; neon accents provide
-/// high-contrast visual hierarchy against the dark surface.
+/// Zenvix color palette — Premium flat, paper-like theme.
 class AppColors {
   AppColors._();
 
-  // â”€â”€ Background & Surface â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const Color background = Color(0xFF000000);
-  static const Color surface = Color(0xFF0D0D0D);
-  static const Color surfaceLight = Color(0xFF1A1A1A);
-  static const Color surfaceBorder = Color(0xFF2A2A2A);
-  static const Color cardSurface = Color(0xFF111111);
+  static const Color ink = Color(0xFF252A34);
+  static const Color coral = Color(0xFFE9826E);
+  static const Color paper = Color(0xFFFAF8F5);
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color mist = Color(0xFFF0EFEC);
+  static const Color slate = Color(0xFF777B83);
+  static const Color border = Color(0xFFE3E0DA);
 
-  // â”€â”€ Accent: Neon Blue / Electric Purple â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const Color neonBlue = Color(0xFF00B4FF);
-  static const Color electricPurple = Color(0xFF9D4EDD);
-  static const Color accentCyan = Color(0xFF00E5FF);
-  static const Color accentPink = Color(0xFFFF006E);
+  static const Color sage = Color(0xFF789C86);
+  static const Color amber = Color(0xFFD9A441);
+  static const Color error = Color(0xFFC96B67);
 
-  // â”€â”€ Gradients â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Shadows for cards
+  static List<BoxShadow> get subtleElevation => [
+    BoxShadow(
+      color: ink.withValues(alpha: 0.04),
+      blurRadius: 10,
+      offset: const Offset(0, 2),
+    ),
+  ];
+
+  // ── Legacy aliases (mapped to new aesthetic) ──
+  static const Color background = paper;
+  static const Color surface = white;
+  static const Color surfaceLight = mist;
+  static const Color cardSurface = white;
+  static const Color surfaceBorder = border;
+
+  static const Color neonBlue = ink; // primary accent -> ink
+  static const Color electricPurple = coral; // secondary accent -> coral
+  static const Color accentCyan = sage;
+  static const Color accentPink = amber;
+
+  static const Color textPrimary = ink;
+  static const Color textSecondary = slate;
+  static const Color textTertiary = slate;
+  static const Color textDisabled = slate;
+
+  static const Color success = sage;
+  static const Color warning = amber;
+  static const Color info = ink;
+
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [neonBlue, electricPurple],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    colors: [ink, ink],
   );
-
+  
   static const LinearGradient cardGlowGradient = LinearGradient(
-    colors: [
-      Color(0x3300B4FF), // neonBlue 20%
-      Color(0x339D4EDD), // electricPurple 20%
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    colors: [white, white],
   );
 
   static const LinearGradient subtleGradient = LinearGradient(
-    colors: [Color(0xFF0D0D0D), Color(0xFF151515)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+    colors: [paper, mist],
   );
 
-  // â”€â”€ Text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFFB0B0B0);
-  static const Color textTertiary = Color(0xFF707070);
-  static const Color textDisabled = Color(0xFF4A4A4A);
-
-  // â”€â”€ Semantic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static const Color success = Color(0xFF00E676);
-  static const Color warning = Color(0xFFFFAB00);
-  static const Color error = Color(0xFFFF1744);
-  static const Color info = Color(0xFF00B0FF);
-
-  // â”€â”€ Shadows (for cards on OLED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  static List<BoxShadow> get neonGlow => [
-    BoxShadow(
-      color: neonBlue.withValues(alpha: 0.15),
-      blurRadius: 20,
-      spreadRadius: 2,
-    ),
-    BoxShadow(
-      color: electricPurple.withValues(alpha: 0.10),
-      blurRadius: 30,
-      spreadRadius: 4,
-    ),
-  ];
-
-  static List<BoxShadow> get subtleElevation => [
-    BoxShadow(
-      color: Colors.black.withValues(alpha: 0.6),
-      blurRadius: 12,
-      offset: const Offset(0, 4),
-    ),
-  ];
+  static List<BoxShadow> get neonGlow => subtleElevation;
 }

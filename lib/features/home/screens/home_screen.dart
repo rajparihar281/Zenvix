@@ -104,20 +104,24 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: AppColors.background,
+    backgroundColor: AppColors.paper,
     appBar: _buildAppBar(),
     drawer: const AppDrawer(),
+    floatingActionButton: FloatingActionButton.extended(
+      onPressed: () => _quickOpen(ToolCategory.pdf),
+      icon: const Icon(Icons.add_rounded),
+      label: const Text('Open PDF'),
+    ),
     body: FadeTransition(
       opacity: _fadeAnimation,
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(child: _buildHero(context)),
-          SliverToBoxAdapter(child: _buildQuickActions(context)),
           for (final category in ToolCategory.values)
             _buildCategorySection(context, category),
           const SliverToBoxAdapter(
-            child: SizedBox(height: AppTheme.spacingXXL),
+            child: SizedBox(height: AppTheme.spacingXXL * 2), // Extra space for FAB
           ),
         ],
       ),
@@ -125,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen>
   );
 
   PreferredSizeWidget _buildAppBar() => AppBar(
-    backgroundColor: AppColors.background,
+    backgroundColor: AppColors.paper,
     elevation: 0,
     title: Row(
       children: [
@@ -133,20 +137,24 @@ class _HomeScreenState extends State<HomeScreen>
           'assets/logo/logo.png',
           width: 32,
           height: 32,
+          color: AppColors.ink,
         ),
         const SizedBox(width: 10),
-        const Text(AppStrings.appName),
+        const Text(
+          AppStrings.appName,
+          style: TextStyle(color: AppColors.ink, fontWeight: FontWeight.bold),
+        ),
       ],
     ),
     leading: Builder(
       builder: (context) => IconButton(
-        icon: const Icon(Icons.menu_rounded, size: 26),
+        icon: const Icon(Icons.menu_rounded, size: 26, color: AppColors.ink),
         onPressed: () => Scaffold.of(context).openDrawer(),
       ),
     ),
     actions: [
       IconButton(
-        icon: const Icon(Icons.folder_outlined, size: 24),
+        icon: const Icon(Icons.folder_outlined, size: 24, color: AppColors.ink),
         tooltip: AppStrings.myFiles,
         onPressed: () => Navigator.pushNamed(context, '/my-files'),
       ),
@@ -157,64 +165,24 @@ class _HomeScreenState extends State<HomeScreen>
   // ── Hero ─────────────────────────────────────────────────────────────
 
   Widget _buildHero(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ShaderMask(
-          shaderCallback: (bounds) => AppColors.accentGradient.createShader(
-            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-          ),
-          child: Text(
-            AppStrings.appTagline,
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              height: 1.25,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        const SizedBox(height: AppTheme.spacingSM),
-        Text(
-          '${registeredTools.where((t) => t.isAvailable).length} tools ready',
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: AppColors.textTertiary),
-        ),
-      ],
-    ),
-  );
-
-  // ── Quick action open buttons ─────────────────────────────────────────
-
-  Widget _buildQuickActions(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
+    padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Open a file',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: AppColors.textTertiary,
-            letterSpacing: 0.5,
+          'Your PDFs',
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: AppColors.ink,
+            fontSize: 36,
           ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            _QuickOpenChip(
-              label: 'PDF',
-              icon: Icons.picture_as_pdf_rounded,
-              color: AppColors.neonBlue,
-              onTap: () => _quickOpen(ToolCategory.pdf),
-            ),
-            const SizedBox(width: 10),
-            _QuickOpenChip(
-              label: 'Text',
-              icon: Icons.text_snippet_outlined,
-              color: AppColors.warning,
-              onTap: () => _quickOpen(ToolCategory.documents),
-            ),
-          ],
+        const SizedBox(height: 8),
+        Text(
+          'Manage and edit documents seamlessly.',
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: AppColors.slate,
+          ),
         ),
       ],
     ),
@@ -233,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(top: 28),
+        padding: const EdgeInsets.only(top: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -242,25 +210,13 @@ class _HomeScreenState extends State<HomeScreen>
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceLight,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.surfaceBorder),
-                    ),
-                    child: Icon(
-                      category.icon,
-                      size: 16,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
                   Text(
-                    category.label,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    category.label.toUpperCase(),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: AppColors.slate,
+                      letterSpacing: 1.2,
+                      fontSize: 12,
                     ),
                   ),
                   const Spacer(),
@@ -269,28 +225,29 @@ class _HomeScreenState extends State<HomeScreen>
                       onTap: () => _quickOpen(category),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
+                          horizontal: 12,
+                          vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.surfaceLight,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.surfaceBorder),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: AppColors.subtleElevation,
                         ),
                         child: Row(
                           children: const [
                             Icon(
                               Icons.folder_open_outlined,
-                              size: 13,
-                              color: AppColors.textTertiary,
+                              size: 14,
+                              color: AppColors.ink,
                             ),
-                            SizedBox(width: 4),
+                            SizedBox(width: 6),
                             Text(
-                              'Open file',
+                              'Open',
                               style: TextStyle(
-                                fontSize: 11,
-                                color: AppColors.textTertiary,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: AppColors.ink,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -317,53 +274,6 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
-}
-
-// ── Quick Open Chip ───────────────────────────────────────────────────────
-
-class _QuickOpenChip extends StatelessWidget {
-  const _QuickOpenChip({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: () {
-      HapticFeedback.lightImpact();
-      onTap();
-    },
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }
 
 // ── Tool Row ──────────────────────────────────────────────────────────────
@@ -394,35 +304,29 @@ class _ToolRowState extends State<_ToolRow> {
       onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedContainer(
         duration: AppTheme.animFast,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: _pressed
-              ? tool.accentColor.withValues(alpha: 0.06)
-              : AppColors.cardSurface,
+          color: _pressed ? AppColors.mist : AppColors.white,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           border: Border.all(
-            color: _pressed
-                ? tool.accentColor.withValues(alpha: 0.35)
-                : AppColors.surfaceBorder.withValues(alpha: 0.6),
+            color: _pressed ? AppColors.slate.withValues(alpha: 0.3) : AppColors.border,
           ),
+          boxShadow: _pressed ? [] : AppColors.subtleElevation,
         ),
         child: Row(
           children: [
             // Icon
             Container(
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: tool.accentColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: tool.accentColor.withValues(alpha: 0.2),
-                ),
+                color: AppColors.mist,
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(tool.icon, color: tool.accentColor, size: 20),
+              child: Icon(tool.icon, color: AppColors.ink, size: 22),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
 
             // Title + description
             Expanded(
@@ -432,17 +336,17 @@ class _ToolRowState extends State<_ToolRow> {
                   Text(
                     tool.title,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: AppColors.ink,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(
                     tool.description,
                     style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textTertiary,
+                      fontSize: 13,
+                      color: AppColors.slate,
                       height: 1.3,
                     ),
                     maxLines: 1,
@@ -455,8 +359,8 @@ class _ToolRowState extends State<_ToolRow> {
             // Chevron
             const Icon(
               Icons.chevron_right_rounded,
-              size: 18,
-              color: AppColors.textDisabled,
+              size: 20,
+              color: AppColors.slate,
             ),
           ],
         ),
@@ -485,25 +389,24 @@ class _ComingSoonRowState extends State<_ComingSoonRow> {
       GestureDetector(
         onTap: () => setState(() => _expanded = !_expanded),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Row(
             children: [
-              const SizedBox(width: 2),
               AnimatedRotation(
                 turns: _expanded ? 0.25 : 0,
                 duration: AppTheme.animFast,
                 child: const Icon(
                   Icons.chevron_right_rounded,
-                  size: 16,
-                  color: AppColors.textDisabled,
+                  size: 18,
+                  color: AppColors.slate,
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
                 '${widget.tools.length} coming soon',
                 style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textDisabled,
+                  fontSize: 13,
+                  color: AppColors.slate,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -535,43 +438,43 @@ class _DisabledToolRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     decoration: BoxDecoration(
-      color: AppColors.cardSurface,
+      color: AppColors.white.withValues(alpha: 0.5),
       borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-      border: Border.all(color: AppColors.surfaceBorder.withValues(alpha: 0.3)),
+      border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
     ),
     child: Row(
       children: [
         Container(
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
-            color: AppColors.surfaceLight,
-            borderRadius: BorderRadius.circular(10),
+            color: AppColors.mist.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(tool.icon, color: AppColors.textDisabled, size: 20),
+          child: Icon(tool.icon, color: AppColors.slate.withValues(alpha: 0.5), size: 22),
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 tool.title,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textDisabled,
+                  color: AppColors.slate.withValues(alpha: 0.7),
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 3),
               Text(
                 tool.description,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textDisabled,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.slate.withValues(alpha: 0.5),
                   height: 1.3,
                 ),
                 maxLines: 1,
@@ -581,18 +484,17 @@ class _DisabledToolRow extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: AppColors.surfaceLight,
+            color: AppColors.mist,
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.surfaceBorder),
           ),
           child: const Text(
             'SOON',
             style: TextStyle(
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: AppColors.textDisabled,
+              color: AppColors.slate,
               letterSpacing: 1.2,
             ),
           ),

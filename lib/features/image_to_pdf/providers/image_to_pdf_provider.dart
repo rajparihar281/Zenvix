@@ -117,9 +117,8 @@ class ImageToPdfNotifier extends StateNotifier<ImageToPdfState> {
   /// Reorder image from [oldIndex] to [newIndex].
   void reorderImages(int oldIndex, int newIndex) {
     final images = List<EditableImage>.from(state.images);
-    final targetIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
     final item = images.removeAt(oldIndex);
-    images.insert(targetIndex, item);
+    images.insert(newIndex, item);
     state = state.copyWith(images: images);
   }
 
