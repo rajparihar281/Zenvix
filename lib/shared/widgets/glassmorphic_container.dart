@@ -36,10 +36,10 @@ class GlassmorphicContainer extends StatelessWidget {
         child: Container(
           padding: padding ?? const EdgeInsets.all(AppTheme.spacingMD),
           decoration: BoxDecoration(
-            color: (tintColor ?? AppColors.surfaceLight).withValues(alpha: 0.4),
+            color: (tintColor ?? AppColors.mist).withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: AppColors.surfaceBorder.withValues(alpha: 0.5),
+              color: AppColors.border.withValues(alpha: 0.5),
               width: 0.8,
             ),
           ),

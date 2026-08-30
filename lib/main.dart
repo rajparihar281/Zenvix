@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zenvix/core/constants/app_strings.dart';
 import 'package:zenvix/core/launcher/app_launcher.dart';
+import 'package:zenvix/core/theme/app_colors.dart';
 import 'package:zenvix/core/theme/app_theme.dart';
 
 void main() {
@@ -11,9 +12,9 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.black,
-      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: AppColors.paper,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
@@ -26,7 +27,7 @@ class ZenvixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppLauncher(
     appTitle: AppStrings.appName,
-    theme: AppTheme.darkTheme,
+    theme: AppTheme.theme,
     initialRoute: '/splashscreen',
   );
 }
