@@ -52,7 +52,7 @@ class ImagePreviewScreen extends ConsumerWidget {
           Expanded(
             child: ReorderableListView.builder(
               padding: const EdgeInsets.all(AppTheme.spacingSM),
-              onReorder: notifier.reorderImages,
+              onReorderItem: notifier.reorderImages,
               itemCount: state.images.length,
               proxyDecorator: (child, idx, anim) => Material(
                 color: Colors.transparent,

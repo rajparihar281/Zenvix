@@ -67,7 +67,7 @@ class AppDrawer extends StatelessWidget {
     ];
 
     return Drawer(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.paper,
       child: SafeArea(
         child: Column(
           children: [
@@ -80,13 +80,7 @@ class AppDrawer extends StatelessWidget {
                 AppTheme.spacingLG,
                 AppTheme.spacingLG,
               ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF0A0A1A), Color(0xFF000000)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
+              color: AppColors.paper,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,6 +89,7 @@ class AppDrawer extends StatelessWidget {
                     'assets/logo/logo.png',
                     width: 52,
                     height: 52,
+                    color: AppColors.ink,
                   ),
                   const SizedBox(height: AppTheme.spacingMD),
                   // App name
@@ -103,13 +98,14 @@ class AppDrawer extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1,
+                      color: AppColors.ink,
                     ),
                   ),
                   const SizedBox(height: AppTheme.spacingXS),
                   Text(
                     'Multi-tool utility suite',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textTertiary,
+                      color: AppColors.slate,
                     ),
                   ),
                 ],
@@ -141,7 +137,7 @@ class AppDrawer extends StatelessWidget {
                 'v${AppStrings.appVersion}',
                 style: Theme.of(
                   context,
-                ).textTheme.bodySmall?.copyWith(color: AppColors.textDisabled),
+                ).textTheme.bodySmall?.copyWith(color: AppColors.slate.withValues(alpha: 0.5)),
               ),
             ),
           ],
@@ -154,17 +150,17 @@ class AppDrawer extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 2),
     child: Material(
       color: item.isCurrent
-          ? AppColors.neonBlue.withValues(alpha: 0.08)
+          ? AppColors.mist
           : Colors.transparent,
       borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
       child: ListTile(
         leading: Icon(
           item.icon,
           color: item.isCurrent
-              ? AppColors.neonBlue
+              ? AppColors.coral
               : item.enabled
-              ? AppColors.textSecondary
-              : AppColors.textDisabled,
+              ? AppColors.slate
+              : AppColors.slate.withValues(alpha: 0.4),
           size: 22,
         ),
         title: Text(
@@ -173,25 +169,25 @@ class AppDrawer extends StatelessWidget {
             fontSize: 14,
             fontWeight: item.isCurrent ? FontWeight.w600 : FontWeight.w500,
             color: item.isCurrent
-                ? AppColors.neonBlue
+                ? AppColors.coral
                 : item.enabled
-                ? AppColors.textPrimary
-                : AppColors.textDisabled,
+                ? AppColors.ink
+                : AppColors.slate.withValues(alpha: 0.4),
           ),
         ),
         trailing: !item.enabled
             ? Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLight,
+                  color: AppColors.mist,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
-                child: const Text(
+                child: Text(
                   'SOON',
                   style: TextStyle(
                     fontSize: 8,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textDisabled,
+                    color: AppColors.slate.withValues(alpha: 0.6),
                     letterSpacing: 1,
                   ),
                 ),
@@ -220,14 +216,17 @@ class AppDrawer extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(AppStrings.appName),
+        title: const Text(
+          AppStrings.appName,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         content: const Text(AppStrings.aboutDescription),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text(
               'Close',
-              style: TextStyle(color: AppColors.neonBlue),
+              style: TextStyle(color: AppColors.ink),
             ),
           ),
         ],

@@ -78,9 +78,8 @@ class PdfCombinerNotifier extends StateNotifier<PdfCombinerState> {
 
   void reorderFiles(int oldIndex, int newIndex) {
     final files = List<PdfFileItem>.from(state.files);
-    final targetIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
     final item = files.removeAt(oldIndex);
-    files.insert(targetIndex, item);
+    files.insert(newIndex, item);
     state = state.copyWith(files: files);
   }
 
