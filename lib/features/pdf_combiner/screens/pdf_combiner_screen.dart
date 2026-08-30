@@ -118,7 +118,7 @@ class PdfCombinerScreen extends ConsumerWidget {
       Expanded(
         child: ReorderableListView.builder(
           padding: const EdgeInsets.all(AppTheme.spacingSM),
-          onReorder: notifier.reorderFiles,
+          onReorderItem: notifier.reorderFiles,
           itemCount: state.files.length,
           proxyDecorator: (child, idx, anim) => Material(
             color: Colors.transparent,
