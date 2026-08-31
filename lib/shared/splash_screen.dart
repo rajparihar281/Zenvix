@@ -96,10 +96,19 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _iconOpacity.value,
               child: Transform.scale(scale: _iconScale.value, child: child),
             ),
-            child: Image.asset(
-              'assets/logo/logo.png',
-              width: 88,
-              height: 88,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: AppColors.subtleElevation,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  'assets/logo/logo.png',
+                  width: 88,
+                  height: 88,
+                ),
+              ),
             ),
           ),
 
