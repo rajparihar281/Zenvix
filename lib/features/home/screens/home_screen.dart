@@ -133,11 +133,13 @@ class _HomeScreenState extends State<HomeScreen>
     elevation: 0,
     title: Row(
       children: [
-        Image.asset(
-          'assets/logo/logo.png',
-          width: 32,
-          height: 32,
-          color: AppColors.ink,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            'assets/logo/logo.png',
+            width: 32,
+            height: 32,
+          ),
         ),
         const SizedBox(width: 10),
         const Text(
